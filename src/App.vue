@@ -17,23 +17,25 @@
         <div slot="header" class="flex gap">
           <div class="flex flex-wrap flex-1">
             <span class="text-md font-bold">{{ price }}</span>
-            <span class="ml">
-              <span class="mr">a10s:</span>
-              {{ a10s | fixed(fixed) }}
-            </span>
-            <span class="ml">
-              <span class="mr">am:</span>
-              {{ am | fixed(fixed) }}
-            </span>
-            <span class="ml">
-              <span class="mr">a15m:</span>
-              {{ a15m | fixed(fixed) }}
-            </span>
-            <span class="ml">
-              <span class="mr">ah:</span>
-              {{ ah | fixed(fixed) }}
-            </span>
-            <span class="flex-1"></span>
+            <div>
+              <span class="ml">
+                <span class="mr">a10s:</span>
+                {{ a10s | fixed(fixed) }}
+              </span>
+              <span class="ml">
+                <span class="mr">am:</span>
+                {{ am | fixed(fixed) }}
+              </span>
+              <span class="ml">
+                <span class="mr">a15m:</span>
+                {{ a15m | fixed(fixed) }}
+              </span>
+              <span class="ml">
+                <span class="mr">ah:</span>
+                {{ ah | fixed(fixed) }}
+              </span>
+              <span class="flex-1"></span>
+            </div>
           </div>
           <el-button
             icon="el-icon-close"
