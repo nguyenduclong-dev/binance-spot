@@ -20,19 +20,19 @@
             <div>
               <span>
                 <span class="mr">a10s:</span>
-                {{ a10s | fixed(fixed) | trimNumber }}
+                {{ a10s | precision(precision) | trimNumber }}
               </span>
               <span class="ml">
                 <span class="mr">am:</span>
-                {{ am | fixed(fixed) | trimNumber }}
+                {{ am | precision(precision) | trimNumber }}
               </span>
               <span class="ml">
                 <span class="mr">a15m:</span>
-                {{ a15m | fixed(fixed) | trimNumber }}
+                {{ a15m | precision(precision) | trimNumber }}
               </span>
               <span class="ml">
                 <span class="mr">ah:</span>
-                {{ ah | fixed(fixed) | trimNumber }}
+                {{ ah | precision(precision) | trimNumber }}
               </span>
               <span class="flex-1"></span>
             </div>
@@ -50,18 +50,20 @@
 
         <el-form>
           <div class="flex gap-2">
-            <el-form-item label="Budget">
+            <el-form-item :label="`Budget (${coin1})`">
               <el-input-number
                 :min="0"
                 v-model="budget"
                 controls-position="right"
                 :step="10 ** -fixed"
-              />
+              >
+                <span slot="prefix">s</span>
+              </el-input-number>
             </el-form-item>
-            <el-form-item label="Fixed">
+            <el-form-item label="Precision">
               <el-input-number
                 :min="0"
-                v-model="fixed"
+                v-model="precision"
                 controls-position="right"
               />
             </el-form-item>
@@ -71,6 +73,9 @@
 
         <div class="flex items-center justify-center w-full mt-4">
           <el-button type="success" @click="save(false)">Lưu</el-button>
+          <el-button @click="handleClear">
+            Clear
+          </el-button>
         </div>
       </el-card>
     </div>
@@ -81,7 +86,7 @@
 /* eslint-disable for-direction */
 export default {
   filters: {
-    fixed(value, fixed = 0) {
+    precision(value, fixed = 0) {
       return Number(value).toFixed(fixed);
     },
     trimNumber(value) {
@@ -91,6 +96,7 @@ export default {
 
   data() {
     return {
+      loaded: false,
       active: false,
       mode: "mini", // mini, normal, full
       a10s: NaN, // 10s
@@ -103,7 +109,7 @@ export default {
       couple: "",
       coin1: "",
       coin2: "",
-      fixed: 3,
+      precision: 3,
       budget: 0,
     };
   },
@@ -166,8 +172,8 @@ export default {
     this.coin1 = coin1;
     this.coin2 = coin2;
     this.couple = coin1 + coin2;
-    this.setupSocket();
     this.load();
+    this.setupSocket();
 
     this._interval = setInterval(this.tick30s, 30 * 1000);
   },
@@ -177,9 +183,24 @@ export default {
   },
 
   methods: {
+    handleClear() {
+      this.prices = [];
+      this.save();
+      this.$message.success("Cleared!");
+    },
     load() {
       const saved = localStorage.getItem(`trade.${this.couple}`) || "{}";
       const data = JSON.parse(saved);
+      if (data.prices) {
+        const index =
+          data.prices.findIndex(
+            (item) => item.t >= Date.now() - 60 * 60 * 1000
+          ) - 1;
+
+        if (index >= 0) {
+          data.prices.splice(0, index);
+        }
+      }
       Object.assign(this, data);
     },
 
@@ -199,7 +220,7 @@ export default {
           couple: this.couple,
           coin1: this.coin1,
           coin2: this.coin2,
-          fixed: this.fixed,
+          precision: this.precision,
           active: this.active,
         })
       );
