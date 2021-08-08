@@ -35,6 +35,7 @@ export default {
     this.coin1 = coin1;
     this.coin2 = coin2;
     this.couple = coin1 + coin2;
+    this.setupSocket();
   },
 
   methods: {
