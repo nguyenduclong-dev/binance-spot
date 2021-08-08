@@ -11,6 +11,7 @@
 </template>
 
 <script>
+/* eslint-disable for-direction */
 export default {
   data() {
     return {
@@ -26,6 +27,36 @@ export default {
       coin1: "",
       coin2: "",
     };
+  },
+
+  watch: {
+    prices() {
+      const now = Date.now();
+      let a10s, am, a15m, ah;
+
+      for (let index = this.prices.length - 1; index <= 0; index--) {
+        const item = this.prices[index];
+
+        if (!a10s && item.t <= now - 10 * 1000) {
+          a10s = this.price - item.p;
+        }
+
+        if (!am && item.t <= now - 60 * 1000) {
+          am = this.price - item.p;
+        }
+
+        if (!a15m && item.t <= now - 15 * 60 * 1000) {
+          a15m = this.price - item.p;
+        }
+
+        if (!ah && item.t <= now - 15 * 60 * 1000) {
+          ah = this.price - item.p;
+          break;
+        }
+      }
+
+      Object.assign(this, { a10s, am, a15m, ah });
+    },
   },
 
   created() {
@@ -75,7 +106,7 @@ export default {
 .container .mini {
   position: fixed;
   right: 24px;
-  bottom: 16px;
+  top: 80px;
   cursor: pointer;
   opacity: 1;
   z-index: 998;
