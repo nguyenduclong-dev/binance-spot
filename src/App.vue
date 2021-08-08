@@ -15,11 +15,12 @@
 export default {
   data() {
     return {
+      active: false,
       mode: "mini", // mini, normal, full
-      a10s: null, // 10s
-      am: null, // 1 minute
-      a15m: null, // 15 minutes
-      ah: null, // 1 hour
+      a10s: NaN, // 10s
+      am: NaN, // 1 minute
+      a15m: NaN, // 15 minutes
+      ah: NaN, // 1 hour
       prices: [],
       price: 0,
       socket: null,
@@ -32,26 +33,29 @@ export default {
   watch: {
     prices() {
       const now = Date.now();
-      let a10s, am, a15m, ah;
+      let a10s = NaN,
+        am = NaN,
+        a15m = NaN,
+        ah = NaN;
 
       if (!this.prices.length) return;
 
       for (let index = this.prices.length - 1; index >= 0; index--) {
         const item = this.prices[index];
 
-        if (!a10s && item.t <= now - 10 * 1000) {
+        if (isNaN(a10s) && item.t <= now - 10 * 1000) {
           a10s = this.price - item.p;
         }
 
-        if (!am && item.t <= now - 60 * 1000) {
+        if (isNaN(am) && item.t <= now - 60 * 1000) {
           am = this.price - item.p;
         }
 
-        if (!a15m && item.t <= now - 15 * 60 * 1000) {
+        if (isNaN(a15m) && item.t <= now - 15 * 60 * 1000) {
           a15m = this.price - item.p;
         }
 
-        if (!ah && item.t <= now - 60 * 60 * 1000) {
+        if (isNaN(ah) && item.t <= now - 60 * 60 * 1000) {
           ah = this.price - item.p;
           break;
         }
@@ -69,9 +73,35 @@ export default {
     this.coin2 = coin2;
     this.couple = coin1 + coin2;
     this.setupSocket();
+
+    this._interval = setInterval(this.tick30s, 30 * 1000);
   },
 
+  beforeDestroy() {},
+
   methods: {
+    load() {
+      const saved = localStorage.getItem(`trade.${this.couple}`) || "{}";
+      const data = JSON.parse(saved);
+      Object.assign(this, data);
+    },
+
+    tick30s() {
+      localStorage.setItem(
+        `trade.${this.couple}`,
+        JSON.stringify({
+          a10s: this.a10s,
+          am: this.am,
+          a15m: this.a15m,
+          ah: this.ah,
+          prices: this.prices,
+          couple: this.couple,
+          coin1: this.coin1,
+          coin2: this.coin2,
+        })
+      );
+    },
+
     setupSocket() {
       const socket = new WebSocket("wss://stream.binance.com/stream");
 
@@ -87,11 +117,15 @@ export default {
       socket.addEventListener("message", (event) => {
         const message = JSON.parse(event.data);
         if (message.stream === `${this.couple.toLowerCase()}@aggTrade`) {
-          this.prices.push({
+          const item = {
             p: message.data.p,
             t: message.data.T,
-          });
-          this.price = message.data.p;
+          };
+          if (this.prices[0] && this.prices[0].t < item.t - 60 * 60 * 1000) {
+            this.prices.splice(0, 1);
+          }
+          this.prices.push(item);
+          this.price = item.p;
         }
       });
 
