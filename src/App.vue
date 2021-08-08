@@ -22,7 +22,7 @@ export default {
       prices: [],
       price: 0,
       socket: null,
-      copule: "",
+      couple: "",
       coin1: "",
       coin2: "",
     };
