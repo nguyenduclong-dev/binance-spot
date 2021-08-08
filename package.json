@@ -7,7 +7,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "publish": "yarn build && git add . && git commit -m \"update\" && yarn push",
-    "push": "GIT_SSH_COMMAND='ssh -i ~/.ssh/dev' git push origin master",
+    "push": "GIT_SSH_COMMAND='ssh -i ~/.ssh/dev' git push origin main",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
@@ -22,6 +22,9 @@
     "babel-eslint": "^10.1.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
+    "node-sass": "^6.0.1",
+    "sass": "^1.37.5",
+    "sass-loader": "10",
     "vue-template-compiler": "^2.6.11"
   },
   "eslintConfig": {
