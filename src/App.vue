@@ -14,13 +14,27 @@
 
     <div v-else class="full">
       <el-card>
-        <div slot="header" class="flex gap flex-wrap">
-          <span class="text-md font-bold">{{ price }}</span>
-          <span class="ml">a10s:{{ a10s | fixed(fixed) }}</span>
-          <span class="ml">am:{{ am | fixed(fixed) }}</span>
-          <span class="ml">a15m:{{ a15m | fixed(fixed) }}</span>
-          <span class="ml">ah:{{ ah | fixed(fixed) }}</span>
-          <span class="flex-1"></span>
+        <div slot="header" class="flex gap">
+          <div class="flex flex-wrap flex-1">
+            <span class="text-md font-bold">{{ price }}</span>
+            <span class="ml">
+              <span class="mr">a10s:</span>
+              {{ a10s | fixed(fixed) }}
+            </span>
+            <span class="ml">
+              <span class="mr">am:</span>
+              {{ am | fixed(fixed) }}
+            </span>
+            <span class="ml">
+              <span class="mr">a15m:</span>
+              {{ a15m | fixed(fixed) }}
+            </span>
+            <span class="ml">
+              <span class="mr">ah:</span>
+              {{ ah | fixed(fixed) }}
+            </span>
+            <span class="flex-1"></span>
+          </div>
           <el-button
             icon="el-icon-close"
             style="float: right; padding: 3px 0"
@@ -180,6 +194,7 @@ export default {
           coin1: this.coin1,
           coin2: this.coin2,
           fixed: this.fixed,
+          active: this.active,
         })
       );
       if (!silient) {
