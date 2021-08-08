@@ -1,3 +1,5 @@
+@import url("https://unpkg.com/element-ui/lib/theme-chalk/index.css");
+
 .el-message {
   min-width: auto !important;
   padding: 8px !important;
@@ -86,4 +88,12 @@
 
 .ml {
   margin-left: 4px;
+}
+
+.mb-auto {
+  margin-bottom: auto;
+}
+
+.m5-auto {
+  margin-top: auto;
 }

@@ -15,10 +15,10 @@
     <div v-else class="full">
       <el-card>
         <div slot="header" class="flex gap">
-          <div class="flex flex-wrap flex-1">
+          <div class="flex flex-wrap flex-1 justify-start">
             <span class="text-md font-bold">{{ price }}</span>
             <div>
-              <span class="ml">
+              <span>
                 <span class="mr">a10s:</span>
                 {{ a10s | fixed(fixed) }}
               </span>
