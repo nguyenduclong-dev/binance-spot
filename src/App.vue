@@ -16,10 +16,10 @@
       <el-card>
         <div slot="header" class="flex gap flex-wrap">
           <span class="text-md font-bold">{{ price }}</span>
-          <span class="ml">a10s:{{ a10s }}</span>
-          <span class="ml">am:{{ am }}</span>
-          <span class="ml">a15m:{{ a15m }}</span>
-          <span class="ml">ah:{{ ah }}</span>
+          <span class="ml">a10s:{{ a10s | fixed(fixed) }}</span>
+          <span class="ml">am:{{ am | fixed(fixed) }}</span>
+          <span class="ml">a15m:{{ a15m | fixed(fixed) }}</span>
+          <span class="ml">ah:{{ ah | fixed(fixed) }}</span>
           <span class="flex-1"></span>
           <el-button
             icon="el-icon-close"
@@ -52,7 +52,7 @@
           <el-switch v-model="active" active-text="Kích hoạt"></el-switch>
         </el-form>
 
-        <div class="flex items-center justify-center w-full mt-2">
+        <div class="flex items-center justify-center w-full mt-4">
           <el-button type="success" @click="save(false)">Lưu</el-button>
         </div>
       </el-card>
@@ -63,6 +63,12 @@
 <script>
 /* eslint-disable for-direction */
 export default {
+  filters: {
+    fixed(value, fixed = 0) {
+      return Number(value).toFixed(fixed);
+    },
+  },
+
   data() {
     return {
       active: false,
@@ -98,7 +104,7 @@ export default {
         if (
           isNaN(a10s) &&
           item.t <= now - 10 * 1000 &&
-          item.t >= now - 10 * 1000 - 1000
+          item.t >= now - 10 * 1000 - 10 * 1000
         ) {
           a10s = this.price - item.p;
         }
@@ -276,6 +282,7 @@ export default {
     align-items: center;
 
     .el-card {
+      width: 600px;
       max-height: 80vh;
       overflow-y: auto;
     }
