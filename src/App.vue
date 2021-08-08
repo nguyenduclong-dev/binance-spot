@@ -16,23 +16,23 @@
       <el-card>
         <div slot="header" class="flex gap">
           <div class="flex flex-wrap flex-1 justify-start">
-            <div class="text-md font-bold">{{ price }}</div>
+            <div class="text-md font-bold">{{ price | trimNumber }}</div>
             <div>
               <span>
                 <span class="mr">a10s:</span>
-                {{ a10s | fixed(fixed) }}
+                {{ a10s | fixed(fixed) | trimNumber }}
               </span>
               <span class="ml">
                 <span class="mr">am:</span>
-                {{ am | fixed(fixed) }}
+                {{ am | fixed(fixed) | trimNumber }}
               </span>
               <span class="ml">
                 <span class="mr">a15m:</span>
-                {{ a15m | fixed(fixed) }}
+                {{ a15m | fixed(fixed) | trimNumber }}
               </span>
               <span class="ml">
                 <span class="mr">ah:</span>
-                {{ ah | fixed(fixed) }}
+                {{ ah | fixed(fixed) | trimNumber }}
               </span>
               <span class="flex-1"></span>
             </div>
@@ -82,6 +82,9 @@ export default {
   filters: {
     fixed(value, fixed = 0) {
       return Number(value).toFixed(fixed);
+    },
+    trimNumber(value) {
+      return ("" + value).replace(/0*$/);
     },
   },
 
