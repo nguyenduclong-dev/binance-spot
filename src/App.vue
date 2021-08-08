@@ -16,7 +16,7 @@
       <el-card>
         <div slot="header" class="flex gap">
           <div class="flex flex-wrap flex-1 justify-start">
-            <span class="text-md font-bold">{{ price }}</span>
+            <div class="text-md font-bold">{{ price }}</div>
             <div>
               <span>
                 <span class="mr">a10s:</span>
