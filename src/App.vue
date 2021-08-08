@@ -1,12 +1,62 @@
 <template>
   <div class="container">
     <div v-if="mode === 'mini'" class="mini">
-      <span class="text-lg">
+      <span class="text-lg mr-2">
         {{ price }}
       </span>
+
+      <el-button
+        type="text"
+        icon="el-icon-full-screen"
+        @click="mode = 'full'"
+      ></el-button>
     </div>
-    <div v-else-if="mode === 'normal'"></div>
-    <el-card v-else></el-card>
+
+    <div v-else class="full">
+      <el-card>
+        <div slot="header" class="flex gap flex-wrap">
+          <span class="text-md font-bold">{{ price }}</span>
+          <span class="ml">a10s:{{ a10s }}</span>
+          <span class="ml">am:{{ am }}</span>
+          <span class="ml">a15m:{{ a15m }}</span>
+          <span class="ml">ah:{{ ah }}</span>
+          <span class="flex-1"></span>
+          <el-button
+            icon="el-icon-close"
+            style="float: right; padding: 3px 0"
+            type="text"
+            @click="mode = 'mini'"
+          >
+            Close
+          </el-button>
+        </div>
+
+        <el-form>
+          <div class="flex gap-2">
+            <el-form-item label="Budget">
+              <el-input-number
+                :min="0"
+                v-model="budget"
+                controls-position="right"
+                :step="10 ** -fixed"
+              />
+            </el-form-item>
+            <el-form-item label="Fixed">
+              <el-input-number
+                :min="0"
+                v-model="fixed"
+                controls-position="right"
+              />
+            </el-form-item>
+          </div>
+          <el-switch v-model="active" active-text="Kích hoạt"></el-switch>
+        </el-form>
+
+        <div class="flex items-center justify-center w-full mt-2">
+          <el-button type="success" @click="save(false)">Lưu</el-button>
+        </div>
+      </el-card>
+    </div>
   </div>
 </template>
 
@@ -27,6 +77,8 @@ export default {
       couple: "",
       coin1: "",
       coin2: "",
+      fixed: 3,
+      budget: 0,
     };
   },
 
@@ -43,19 +95,35 @@ export default {
       for (let index = this.prices.length - 1; index >= 0; index--) {
         const item = this.prices[index];
 
-        if (isNaN(a10s) && item.t <= now - 10 * 1000) {
+        if (
+          isNaN(a10s) &&
+          item.t <= now - 10 * 1000 &&
+          item.t >= now - 10 * 1000 - 1000
+        ) {
           a10s = this.price - item.p;
         }
 
-        if (isNaN(am) && item.t <= now - 60 * 1000) {
+        if (
+          isNaN(am) &&
+          item.t <= now - 60 * 1000 &&
+          item.t >= now - 60 * 1000 - 10 * 1000
+        ) {
           am = this.price - item.p;
         }
 
-        if (isNaN(a15m) && item.t <= now - 15 * 60 * 1000) {
+        if (
+          isNaN(a15m) &&
+          item.t <= now - 15 * 60 * 1000 &&
+          item.t >= now - 15 * 60 * 1000 - 60 * 1000
+        ) {
           a15m = this.price - item.p;
         }
 
-        if (isNaN(ah) && item.t <= now - 60 * 60 * 1000) {
+        if (
+          isNaN(ah) &&
+          item.t <= now - 60 * 60 * 1000 &&
+          item.t >= now - 60 * 60 * 1000 - 60 * 1000
+        ) {
           ah = this.price - item.p;
           break;
         }
@@ -73,11 +141,14 @@ export default {
     this.coin2 = coin2;
     this.couple = coin1 + coin2;
     this.setupSocket();
+    this.load();
 
     this._interval = setInterval(this.tick30s, 30 * 1000);
   },
 
-  beforeDestroy() {},
+  beforeDestroy() {
+    clearInterval(this._interval);
+  },
 
   methods: {
     load() {
@@ -87,6 +158,10 @@ export default {
     },
 
     tick30s() {
+      this.save();
+    },
+
+    save(silient = true) {
       localStorage.setItem(
         `trade.${this.couple}`,
         JSON.stringify({
@@ -98,8 +173,12 @@ export default {
           couple: this.couple,
           coin1: this.coin1,
           coin2: this.coin2,
+          fixed: this.fixed,
         })
       );
+      if (!silient) {
+        this.$message.success("Đã lưu");
+      }
     },
 
     setupSocket() {
@@ -121,7 +200,10 @@ export default {
             p: message.data.p,
             t: message.data.T,
           };
-          if (this.prices[0] && this.prices[0].t < item.t - 60 * 60 * 1000) {
+          if (
+            this.prices[0] &&
+            this.prices[0].t < item.t - 60 * 60 * 1000 + 10000
+          ) {
             this.prices.splice(0, 1);
           }
           this.prices.push(item);
@@ -131,6 +213,30 @@ export default {
 
       this.socket = socket;
     },
+    buy() {
+      const form = document.querySelector("#orderformBuyBtn").parentElement;
+      console.log(form);
+    },
+
+    sell() {},
+
+    getCoin1Avbl() {
+      return Number(
+        document
+          .querySelector('.balance span[data-testid="baseAssetAmount"]')
+          .innerText.split(" ")
+          .shift()
+      );
+    },
+
+    getCoin2Avbl() {
+      return Number(
+        document
+          .querySelector('.balance span[data-testid="quoteAssetAmount"]')
+          .innerText.split(" ")
+          .shift()
+      );
+    },
   },
 };
 </script>
@@ -139,20 +245,40 @@ export default {
 @import "@/assets/variables.scss";
 @import "@/assets/global.scss";
 
-.container .mini {
-  position: fixed;
-  right: 24px;
-  top: 80px;
-  cursor: pointer;
-  opacity: 1;
-  z-index: 998;
-  border-radius: 32px;
-  height: 48px;
-  padding: 0 12px;
-  background-color: white;
-  border: 1px solid #dcdfe6;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.container {
+  .mini {
+    display: flex;
+    gap: 4px;
+    position: fixed;
+    right: 24px;
+    top: 80px;
+    z-index: 998;
+    border-radius: 32px;
+    height: 32px;
+    padding: 0 12px;
+    background-color: white;
+    border: 1px solid #dcdfe6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .full {
+    z-index: 998;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .el-card {
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+  }
 }
 </style>
