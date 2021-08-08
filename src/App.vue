@@ -34,9 +34,10 @@ export default {
       const now = Date.now();
       let a10s, am, a15m, ah;
 
-      for (let index = this.prices.length - 1; index <= 0; index--) {
+      if (!this.prices.length) return;
+
+      for (let index = this.prices.length - 1; index >= 0; index--) {
         const item = this.prices[index];
-        console.log(item);
 
         if (!a10s && item.t <= now - 10 * 1000) {
           a10s = this.price - item.p;
