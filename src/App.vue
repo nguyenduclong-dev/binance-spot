@@ -22,10 +22,20 @@ export default {
       prices: [],
       price: 0,
       socket: null,
+      copule: "",
+      coin1: "",
+      coin2: "",
     };
   },
 
-  created() {},
+  created() {
+    const url = new URL(location.href);
+    const symbol = url.pathname.split("/").pop();
+    const [coin1, coin2] = symbol.split("_");
+    this.coin1 = coin1;
+    this.coin2 = coin2;
+    this.couple = coin1 + coin2;
+  },
 
   methods: {
     setupSocket() {
