@@ -16,7 +16,7 @@
       <el-card>
         <div slot="header" class="flex gap">
           <div class="flex flex-wrap flex-1 justify-start">
-            <div class="text-md font-bold">{{ price | trimNumber }}</div>
+            <div class="text-md font-bold w-full">{{ price | trimNumber }}</div>
             <div>
               <span>
                 <span class="mr">a10s:</span>
@@ -39,6 +39,7 @@
           </div>
           <el-button
             icon="el-icon-close"
+            class="mb-auto"
             style="float: right; padding: 3px 0"
             type="text"
             @click="mode = 'mini'"
@@ -84,7 +85,7 @@ export default {
       return Number(value).toFixed(fixed);
     },
     trimNumber(value) {
-      return ("" + value).replace(/0*$/);
+      return Number(value).toString();
     },
   },
 
