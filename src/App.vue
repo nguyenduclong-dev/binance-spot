@@ -36,6 +36,7 @@ export default {
 
       for (let index = this.prices.length - 1; index <= 0; index--) {
         const item = this.prices[index];
+        console.log(item);
 
         if (!a10s && item.t <= now - 10 * 1000) {
           a10s = this.price - item.p;
@@ -49,7 +50,7 @@ export default {
           a15m = this.price - item.p;
         }
 
-        if (!ah && item.t <= now - 15 * 60 * 1000) {
+        if (!ah && item.t <= now - 60 * 60 * 1000) {
           ah = this.price - item.p;
           break;
         }
