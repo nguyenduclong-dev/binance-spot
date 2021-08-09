@@ -381,7 +381,9 @@ export default {
           code: this.code,
           budget: this.budget,
           buyPrice: this.buyPrice,
+          buyAmount: this.buyAmount,
           sellPrice: this.sellPrice,
+          sellAmount: this.sellAmount,
           nextAction: this.nextAction,
           profit: this.profit,
         })
