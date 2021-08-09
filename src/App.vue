@@ -438,6 +438,7 @@ export default {
         const payload = {
           method: "SUBSCRIBE",
           params,
+          id: 12,
         };
         socket.send(JSON.stringify(payload));
       });
