@@ -29,13 +29,15 @@
               <template v-if="nextAction === 'sell'">
                 <span class="ml-2">
                   mua:
-                  {{ buyPrice | precision(precision) | trimNumber }} &#9702;
-                  {{ buyAmount | precision(precision) | trimNumber }} &#9702;
+                  {{ buyPrice | precision(precision) | trimNumber }}
+                  <el-divider direction="vertical"></el-divider>
+                  {{ buyAmount | precision(precision) | trimNumber }}
+                  <el-divider direction="vertical"></el-divider>
                   <span
                     :class="[pnl.percent < 0 ? 'text-danger' : 'text-primary']"
                   >
-                    {{ pnl.percent >= 0 ? "+" : "-" }}
-                    {{ pnl.percent | percent }}
+                    {{ pnl.percent >= 0 ? "+" : "-"
+                    }}{{ pnl.percent | percent }}
                   </span>
                 </span>
               </template>
