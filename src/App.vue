@@ -425,7 +425,7 @@ export default {
       inputPrice.value = price;
       inputAmount.value = amount;
 
-      // form.querySelector("#orderformBuyBtn").click();
+      form.querySelector("#orderformBuyBtn").click();
     },
 
     sell(sellPrice = this.price) {
@@ -450,7 +450,7 @@ export default {
       inputPrice.value = price;
       inputAmount.value = amount;
 
-      // form.querySelector("#orderformSellBtn").click();
+      form.querySelector("#orderformSellBtn").click();
     },
 
     getCoin1Avbl() {
