@@ -12,9 +12,16 @@
       ></el-button>
     </div>
 
-    <div v-else class="full">
+    <div v-else class="full" :style="dialogStyle" ref="container">
       <el-card>
-        <div slot="header" class="flex gap">
+        <div
+          slot="header"
+          class="flex gap"
+          @mousedown="handleDragStart"
+          @mouseup="handleDragEnd"
+          @mousemove="handleDrag"
+          style="padding: 18px 20px; margin: -18px -20px;"
+        >
           <div class="flex flex-wrap flex-1 justify-start">
             <div class="text-md font-bold w-full">{{ price | trimNumber }}</div>
             <div>
@@ -145,6 +152,18 @@ export default {
       budget: 0,
       code: "",
       scripts: {},
+      dialogStyle: {
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+      },
+      drag: {
+        onDrag: false,
+        x: 0,
+        y: 0,
+        top: 0,
+        left: 0,
+      },
     };
   },
 
@@ -218,6 +237,28 @@ export default {
   },
 
   methods: {
+    handleDragStart(event) {
+      this.drag = {
+        onDrag: true,
+        x: event.x,
+        y: event.y,
+        top: this.$refs.container.getBoundingClientRect().top,
+        left: this.$refs.container.getBoundingClientRect().left,
+      };
+    },
+    handleDrag(event) {
+      if (!this.drag.onDrag) return;
+      this.dialogStyle = {
+        top: this.drag.top + (event.y - this.drag.y) + "px",
+        left: this.drag.left + (event.x - this.drag.x) + "px",
+      };
+    },
+    handleDragEnd() {
+      this.drag = {
+        onDrag: false,
+      };
+    },
+
     editorInit: function() {
       require("brace/mode/javascript"); //language
       require("brace/theme/chrome");
@@ -350,7 +391,7 @@ export default {
     position: fixed;
     right: 24px;
     top: 80px;
-    z-index: 998;
+    z-index: 2000;
     border-radius: 32px;
     height: 32px;
     padding: 0 12px;
@@ -362,12 +403,9 @@ export default {
   }
 
   .full {
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     width: auto;
     height: auto;
-    z-index: 998;
+    z-index: 2000;
     position: fixed;
     overflow: hidden;
     display: flex;
