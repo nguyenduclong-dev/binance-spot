@@ -6,7 +6,8 @@
     "dev": "vue-cli-service serve",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "publish": "yarn build && git add . && git commit -m \"update\" && yarn push",
+    "update": "node ./update.js",
+    "publish": "yarn update && yarn build && git add . && git commit -m \"update\" && yarn push",
     "push": "GIT_SSH_COMMAND='ssh -i ~/.ssh/dev' git push origin main",
     "lint": "vue-cli-service lint"
   },

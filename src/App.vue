@@ -43,6 +43,9 @@
               </span>
               <span class="flex-1"></span>
             </div>
+            <div class="w-full" style="font-size: 12px;">
+              Version: {{ app.version }}
+            </div>
           </div>
           <el-button
             icon="el-icon-close"
@@ -109,6 +112,7 @@
 /* eslint-disable for-direction */
 /* eslint-disable vue/no-reserved-keys */
 import { rt } from "./utils";
+import app from "./app.json";
 
 export default {
   name: "App",
@@ -128,6 +132,7 @@ export default {
 
   data() {
     return {
+      app,
       loaded: false,
       active: false,
       mode: "mini", // mini, normal, full
