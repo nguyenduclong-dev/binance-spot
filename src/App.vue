@@ -23,7 +23,20 @@
           style="padding: 18px 20px; margin: -18px -20px;"
         >
           <div class="flex flex-wrap flex-1 justify-start">
-            <div class="text-md font-bold w-full">{{ price | trimNumber }}</div>
+            <div class="text-md font-bold w-full">
+              {{ price | trimNumber }}
+
+              <template v-if="action === 'sell'">
+                <span class="ml-2">PNL: {{ pnl.percent | percent }}</span>
+                <span class="ml-2">
+                  mua: {{ buyPrice | precision(precision) | trimNumber }} -
+                  {{ buyAmount | precision(precision) | trimNumber }}
+                </span>
+              </template>
+            </div>
+            <div class="text-md font-bold w-full">
+              Lợi nhuận {{ profit | trimNumber }} {{ coin2 }}
+            </div>
             <div>
               <span>
                 <span class="mr">a10s:</span>
@@ -58,7 +71,11 @@
           </el-button>
         </div>
 
-        <el-form>
+        <el-form class="form">
+          <el-form-item label="ChannelId">
+            <el-input v-model="channel"></el-input>
+          </el-form-item>
+
           <div class="flex gap-2">
             <el-form-item :label="`Budget (${coin2})`">
               <el-input-number
@@ -66,9 +83,7 @@
                 v-model="budget"
                 controls-position="right"
                 :step="step"
-              >
-                <span slot="prefix">s</span>
-              </el-input-number>
+              ></el-input-number>
             </el-form-item>
           </div>
 
@@ -123,6 +138,9 @@ export default {
     trimNumber(value) {
       return Number(value).toString();
     },
+    percent(value) {
+      return Number(Number(value).toFixed(2)) + " %";
+    },
   },
 
   components: {
@@ -163,6 +181,13 @@ export default {
         top: 0,
         left: 0,
       },
+      buyPrice: 0,
+      buyAmount: 0,
+      sellPrice: 0,
+      sellAmount: 0,
+      action: "buy", // sell
+      profit: 0,
+      channel: "",
     };
   },
 
@@ -238,6 +263,23 @@ export default {
     clearInterval(this._interval);
   },
 
+  computed: {
+    /**
+     * @return {{percent: number, total: number}}
+     */
+    pnl() {
+      if (this.action === "sell") {
+        const percent = (this.price - this.buyPrice) / this.price;
+        return {
+          percent,
+          total: (this.price - this.buyPrice) * this.buyAmount,
+        };
+      }
+
+      return { percent: 0, total: 0 };
+    },
+  },
+
   methods: {
     getStep(id) {
       const input = document.querySelector(id);
@@ -286,12 +328,14 @@ export default {
     },
 
     handleClear() {
+      this.profit = 0;
       this.prices = [];
       this.save();
       this.$message.success("Cleared!");
     },
 
     load() {
+      this.channel = localStorage.getItem("trade.channel") || "";
       const saved = localStorage.getItem(`trade.${this.couple}`) || "{}";
       const data = JSON.parse(saved);
       Object.assign(this, data);
@@ -329,8 +373,14 @@ export default {
           active: this.active,
           code: this.code,
           budget: this.budget,
+          buyPrice: this.buyPrice,
+          sellPrice: this.sellPrice,
+          action: this.action,
+          profit: this.profit,
         })
       );
+
+      localStorage.setItem("trade.channel", this.channel);
 
       this.loadScripts();
 
@@ -381,18 +431,20 @@ export default {
 
     setupSocket() {
       const socket = new WebSocket("wss://stream.binance.com/stream");
+      const params = [`${this.couple.toLowerCase()}@aggTrade`];
+      if (this.channel) params.push(this.channel);
 
       socket.addEventListener("open", () => {
         const payload = {
           method: "SUBSCRIBE",
-          params: [`${this.couple.toLowerCase()}@aggTrade`],
-          id: 2,
+          params,
         };
         socket.send(JSON.stringify(payload));
       });
 
       socket.addEventListener("message", (event) => {
         const message = JSON.parse(event.data);
+
         if (message.stream === `${this.couple.toLowerCase()}@aggTrade`) {
           const item = {
             p: message.data.p,
@@ -400,6 +452,27 @@ export default {
           };
           this.prices.push(item);
           this.price = item.p;
+        }
+
+        if (message.stream === this.channel) {
+          const data = message.data;
+          if (
+            data.S === "SELL" &&
+            data.X === "FILLED" &&
+            this.s === this.couple.toLowerCase()
+          ) {
+            this.sellPrice = +data.p;
+            this.sellAmount = +data.z;
+            this.profit =
+              this.profit + (this.sellPrice - this.buyPrice) * this.sellAmount;
+          } else if (
+            data.S === "BUY" &&
+            data.x === "FILLED" &&
+            this.s === this.couple.toLowerCase()
+          ) {
+            this.buyPrice = +data.p;
+            this.buyAmount = +data.z;
+          }
         }
       });
 
@@ -511,8 +584,11 @@ export default {
 
     .el-card {
       width: 600px;
-      max-height: 80vh;
-      overflow-y: auto;
+
+      .form {
+        overflow-y: auto;
+        max-height: 60vh;
+      }
     }
   }
 }
