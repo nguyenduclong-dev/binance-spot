@@ -460,7 +460,7 @@ export default {
           if (
             data.S === "SELL" &&
             data.X === "FILLED" &&
-            this.s === this.couple.toLowerCase()
+            this.s === this.couple.toUpperCase()
           ) {
             this.sellPrice = +data.p;
             this.sellAmount = +data.z;
@@ -469,7 +469,7 @@ export default {
           } else if (
             data.S === "BUY" &&
             data.x === "FILLED" &&
-            this.s === this.couple.toLowerCase()
+            this.s === this.couple.toUpperCase()
           ) {
             this.buyPrice = +data.p;
             this.buyAmount = +data.z;
