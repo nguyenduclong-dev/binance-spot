@@ -13,7 +13,8 @@
   "dependencies": {
     "core-js": "^3.6.5",
     "element-ui": "^2.15.5",
-    "vue": "^2.6.11"
+    "vue": "^2.6.11",
+    "vue2-ace-editor": "^0.0.15"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",

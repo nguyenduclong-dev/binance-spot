@@ -55,7 +55,7 @@
                 :min="0"
                 v-model="budget"
                 controls-position="right"
-                :step="10 ** -fixed"
+                :step="10 ** -precision"
               >
                 <span slot="prefix">s</span>
               </el-input-number>
@@ -68,14 +68,37 @@
               />
             </el-form-item>
           </div>
+
+          <el-form-item label="Code">
+            <editor
+              v-model="code"
+              @init="editorInit"
+              lang="javascript"
+              theme="chrome"
+              width="100%"
+              height="300"
+            ></editor>
+          </el-form-item>
+
           <el-switch v-model="active" active-text="Kích hoạt"></el-switch>
         </el-form>
 
         <div class="flex items-center justify-center w-full mt-4">
-          <el-button type="success" @click="save(false)">Lưu</el-button>
-          <el-button @click="handleClear">
-            Clear
-          </el-button>
+          <div>
+            <el-button type="success" @click="save(false)">Lưu</el-button>
+            <el-button @click="handleClear">
+              Clear
+            </el-button>
+          </div>
+
+          <div class="flex-1"></div>
+
+          <div>
+            <el-button type="success" @click="buy(price)">Mua</el-button>
+            <el-button type="danger" @click="sell(price)">
+              Bán
+            </el-button>
+          </div>
         </div>
       </el-card>
     </div>
@@ -84,7 +107,11 @@
 
 <script>
 /* eslint-disable for-direction */
+/* eslint-disable vue/no-reserved-keys */
+import { rt } from "./utils";
+
 export default {
+  name: "App",
   filters: {
     precision(value, fixed = 0) {
       return Number(value).toFixed(fixed);
@@ -92,6 +119,11 @@ export default {
     trimNumber(value) {
       return Number(value).toString();
     },
+  },
+
+  components: {
+    // eslint-disable-next-line vue/no-unused-components
+    editor: require("vue2-ace-editor"),
   },
 
   data() {
@@ -111,6 +143,8 @@ export default {
       coin2: "",
       precision: 3,
       budget: 0,
+      code: "",
+      scripts: {},
     };
   },
 
@@ -166,6 +200,7 @@ export default {
   },
 
   created() {
+    console.log(this);
     const url = new URL(location.href);
     const symbol = url.pathname.split("/").pop();
     const [coin1, coin2] = symbol.split("_");
@@ -183,6 +218,18 @@ export default {
   },
 
   methods: {
+    editorInit: function() {
+      require("brace/mode/javascript"); //language
+      require("brace/theme/chrome");
+      require("brace/snippets/javascript"); //snippet
+    },
+
+    loadScripts() {
+      if (this.code) {
+        this.scripts = rt(this.code, this);
+      }
+    },
+
     handleClear() {
       this.prices = [];
       this.save();
@@ -192,20 +239,23 @@ export default {
     load() {
       const saved = localStorage.getItem(`trade.${this.couple}`) || "{}";
       const data = JSON.parse(saved);
-      if (data.prices) {
-        const index =
-          data.prices.findIndex(
-            (item) => item.t >= Date.now() - 60 * 60 * 1000
-          ) - 1;
-
-        if (index >= 0) {
-          data.prices.splice(0, index);
-        }
-      }
       Object.assign(this, data);
+      this.removePast1h();
+      this.loadScripts();
+    },
+
+    removePast1h() {
+      const index =
+        this.prices.findIndex((item) => item.t >= Date.now() - 60 * 60 * 1000) -
+        1;
+
+      if (index >= 0) {
+        this.prices.splice(0, index);
+      }
     },
 
     tick30s() {
+      this.removePast1h();
       this.save();
     },
 
@@ -223,8 +273,12 @@ export default {
           coin2: this.coin2,
           precision: this.precision,
           active: this.active,
+          code: this.code,
         })
       );
+
+      this.loadScripts();
+
       if (!silient) {
         this.$message.success("Đã lưu");
       }
@@ -249,12 +303,6 @@ export default {
             p: message.data.p,
             t: message.data.T,
           };
-          if (
-            this.prices[0] &&
-            this.prices[0].t < item.t - 60 * 60 * 1000 + 10000
-          ) {
-            this.prices.splice(0, 1);
-          }
           this.prices.push(item);
           this.price = item.p;
         }
