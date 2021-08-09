@@ -188,6 +188,7 @@ export default {
       this.save();
       this.$message.success("Cleared!");
     },
+
     load() {
       const saved = localStorage.getItem(`trade.${this.couple}`) || "{}";
       const data = JSON.parse(saved);
@@ -261,6 +262,7 @@ export default {
 
       this.socket = socket;
     },
+
     buy() {
       const form = document.querySelector("#orderformBuyBtn").parentElement;
       console.log(form);
@@ -312,12 +314,13 @@ export default {
   }
 
   .full {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: auto;
+    height: auto;
     z-index: 998;
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
     overflow: hidden;
     display: flex;
     justify-content: center;
