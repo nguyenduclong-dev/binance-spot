@@ -365,29 +365,26 @@ export default {
     buy() {
       const form = document.querySelector("#orderformBuyBtn").parentElement;
       const inputPrice = form.querySelector("#FormRow-BUY-price");
-      const inputTotal = form.querySelector("#FormRow-BUY-total");
+      const inputAmount = form.querySelector("#FormRow-BUY-quantity");
 
       const price = +Math.max(
         Number(this.price).toFixed(
-          this.getStep("#FormRow-BUY-price").precision
+          this.getStep("#FormRow-BUY-quantity").precision
         ),
-        this.getStep("#FormRow-BUY-price").min
+        this.getStep("#FormRow-BUY-quantity").min
       );
 
-      const total = +Math.min(
-        Math.max(
-          Number(this.price).toFixed(
-            this.getStep("#FormRow-BUY-total").precision
-          ),
-          this.getStep("#FormRow-BUY-total").min
+      const amount = +Math.max(
+        Number(this.budget / this.price).toFixed(
+          this.getStep("#FormRow-BUY-total").precision
         ),
-        this.budget
+        this.getStep("#FormRow-BUY-total").min
       );
 
-      console.log(form, price, total);
+      console.log(form, price, amount);
 
       inputPrice.value = price;
-      inputTotal.value = total;
+      inputAmount.value = amount;
     },
 
     sell() {},
