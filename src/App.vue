@@ -34,7 +34,7 @@
                   {{ buyAmount | precision(precision) | trimNumber }}
                   <el-divider direction="vertical"></el-divider>
                   <span
-                    :class="[pnl.percent < 0 ? 'text-danger' : 'text-primary']"
+                    :class="[pnl.percent < 0 ? 'text-danger' : 'text-success']"
                   >
                     {{ pnl.percent >= 0 ? "+" : "-"
                     }}{{ pnl.percent | percent }}
