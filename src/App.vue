@@ -222,8 +222,11 @@ export default {
     this.couple = coin1 + coin2;
     this.load();
     this.setupSocket();
-    Object.assign(this, this.getStep("#FormRow-BUY-price"));
     this._interval = setInterval(this.tick30s, 30 * 1000);
+
+    setTimeout(() => {
+      Object.assign(this, this.getStep("#FormRow-BUY-price"));
+    }, 1000);
   },
 
   beforeDestroy() {
@@ -237,7 +240,6 @@ export default {
         const step = +input.getAttribute("step");
         const min = +input.getAttribute("min");
         const precision = Math.abs(Math.log10(step));
-
         return { step, precision, min };
       }
 
