@@ -469,9 +469,11 @@ export default {
                 this.profit +
                 (this.sellPrice - this.buyPrice) * this.sellAmount;
             }
+            this.save();
           } else if (data.S === "BUY" && data.x === "FILLED") {
             this.buyPrice = +data.p;
             this.buyAmount = +data.z;
+            this.save();
           }
         }
       });
