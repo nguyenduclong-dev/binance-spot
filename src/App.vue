@@ -236,7 +236,7 @@ export default {
       if (input) {
         const step = +input.getAttribute("step");
         const min = +input.getAttribute("min");
-        const precision = +Math.log10(step);
+        const precision = Math.abs(Math.log10(step));
 
         return { step, precision, min };
       }
