@@ -362,32 +362,55 @@ export default {
 
     getAmount() {},
 
-    buy() {
+    buy(buyPrice = this.price) {
       const form = document.querySelector("#orderformBuyBtn").parentElement;
       const inputPrice = form.querySelector("#FormRow-BUY-price");
       const inputAmount = form.querySelector("#FormRow-BUY-quantity");
 
       const price = +Math.max(
-        Number(this.price).toFixed(
+        Number(buyPrice).toFixed(
           this.getStep("#FormRow-BUY-quantity").precision
         ),
         this.getStep("#FormRow-BUY-quantity").min
       );
 
       const amount = +Math.max(
-        Number(this.budget / this.price).toFixed(
+        Number(this.budget / buyPrice).toFixed(
           this.getStep("#FormRow-BUY-total").precision
         ),
         this.getStep("#FormRow-BUY-total").min
       );
 
-      console.log(form, price, amount);
+      inputPrice.value = price;
+      inputAmount.value = amount;
+
+      // form.querySelector("#orderformBuyBtn").click();
+    },
+
+    sell(sellPrice = this.price) {
+      const form = document.querySelector("#orderformSellBtn").parentElement;
+      const inputPrice = form.querySelector("#FormRow-SELL-price");
+      const inputAmount = form.querySelector("#FormRow-SELL-quantity");
+
+      const price = +Math.max(
+        Number(sellPrice).toFixed(
+          this.getStep("#FormRow-SELL-quantity").precision
+        ),
+        this.getStep("#FormRow-SELL-quantity").min
+      );
+
+      const amount = +Math.max(
+        Number(this.getCoin2Avbl()).toFixed(
+          this.getStep("#FormRow-SELL-total").precision
+        ),
+        this.getStep("#FormRow-SELL-total").min
+      );
 
       inputPrice.value = price;
       inputAmount.value = amount;
-    },
 
-    sell() {},
+      // form.querySelector("#orderformSellBtn").click();
+    },
 
     getCoin1Avbl() {
       return Number(
