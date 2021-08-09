@@ -28,8 +28,9 @@
 
               <template v-if="nextAction === 'sell'">
                 <span class="ml-2">
-                  mua: {{ buyPrice | precision(precision) | trimNumber }} -
-                  {{ buyAmount | precision(precision) | trimNumber }} -
+                  mua:
+                  {{ buyPrice | precision(precision) | trimNumber }} &#9702;
+                  {{ buyAmount | precision(precision) | trimNumber }} &#9702;
                   <span
                     :class="[pnl.percent < 0 ? 'text-danger' : 'text-primary']"
                   >
