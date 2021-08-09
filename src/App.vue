@@ -414,17 +414,15 @@ export default {
       const inputAmount = form.querySelector("#FormRow-BUY-quantity");
 
       const price = +Math.max(
-        Number(buyPrice).toFixed(
-          this.getStep("#FormRow-BUY-quantity").precision
-        ),
-        this.getStep("#FormRow-BUY-quantity").min
+        Number(buyPrice).toFixed(this.getStep("#FormRow-BUY-price").precision),
+        this.getStep("#FormRow-BUY-price").min
       );
 
       const amount = +Math.max(
         Number(this.budget / buyPrice).toFixed(
-          this.getStep("#FormRow-BUY-total").precision
+          this.getStep("#FormRow-BUY-quantity").precision
         ),
-        this.getStep("#FormRow-BUY-total").min
+        this.getStep("#FormRow-BUY-quantity").min
       );
 
       inputPrice.value = price;
@@ -440,16 +438,16 @@ export default {
 
       const price = +Math.max(
         Number(sellPrice).toFixed(
-          this.getStep("#FormRow-SELL-quantity").precision
+          this.getStep("#FormRow-SELL-price").precision
         ),
-        this.getStep("#FormRow-SELL-quantity").min
+        this.getStep("#FormRow-SELL-price").min
       );
 
       const amount = +Math.max(
         Number(this.getCoin2Avbl()).toFixed(
-          this.getStep("#FormRow-SELL-total").precision
+          this.getStep("#FormRow-SELL-quantity").precision
         ),
-        this.getStep("#FormRow-SELL-total").min
+        this.getStep("#FormRow-SELL-quantity").min
       );
 
       inputPrice.value = price;
