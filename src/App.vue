@@ -36,8 +36,7 @@
                   <span
                     :class="[pnl.percent < 0 ? 'text-danger' : 'text-success']"
                   >
-                    {{ pnl.percent >= 0 ? "+" : "-"
-                    }}{{ pnl.percent | percent }}
+                    {{ pnl.percent | percent }}
                   </span>
                 </span>
               </template>
