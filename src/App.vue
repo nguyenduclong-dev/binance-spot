@@ -30,7 +30,11 @@
                 <span class="ml-2">
                   mua: {{ buyPrice | precision(precision) | trimNumber }} -
                   {{ buyAmount | precision(precision) | trimNumber }} -
-                  {{ pnl.percent | percent }}
+                  <span
+                    :class="[pnl.percent < 0 ? 'text-danger' : 'text-primary']"
+                  >
+                    {{ pnl.percent | percent }}
+                  </span>
                 </span>
               </template>
             </div>
