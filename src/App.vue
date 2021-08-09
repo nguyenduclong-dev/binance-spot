@@ -57,7 +57,7 @@
 
         <el-form>
           <div class="flex gap-2">
-            <el-form-item :label="`Budget (${coin1})`">
+            <el-form-item :label="`Budget (${coin2})`">
               <el-input-number
                 :min="0"
                 v-model="budget"
@@ -225,7 +225,7 @@ export default {
     this._interval = setInterval(this.tick30s, 30 * 1000);
 
     setTimeout(() => {
-      Object.assign(this, this.getStep("#FormRow-BUY-price"));
+      Object.assign(this, this.getStep("#FormRow-BUY-total"));
     }, 1000);
   },
 
@@ -365,7 +365,7 @@ export default {
     buy() {
       const form = document.querySelector("#orderformBuyBtn").parentElement;
       const inputPrice = form.querySelector("#FormRow-BUY-price");
-      const inputAmount = form.querySelector("#FormRow-BUY-quantity");
+      const inputTotal = form.querySelector("#FormRow-BUY-total");
 
       const price = +Math.max(
         Number(this.price).toFixed(
@@ -374,20 +374,20 @@ export default {
         this.getStep("#FormRow-BUY-price").min
       );
 
-      const amount = +Math.min(
+      const total = +Math.min(
         Math.max(
           Number(this.price).toFixed(
-            this.getStep("#FormRow-BUY-quantity").precision
+            this.getStep("#FormRow-BUY-total").precision
           ),
-          this.getStep("#FormRow-BUY-quantity").min
+          this.getStep("#FormRow-BUY-total").min
         ),
         this.budget
       );
 
-      console.log(form, price, amount);
+      console.log(form, price, total);
 
       inputPrice.value = price;
-      inputAmount.value = amount;
+      inputTotal.value = total;
     },
 
     sell() {},
