@@ -334,6 +334,46 @@ export default {
       }
     },
 
+    cancelBuyCommand() {
+      const id = (this.coin1 + "/" + this.coin2).toUpperCase();
+      const row = document.querySelector(
+        `div[data-testid="tradeInfoTable"] div[title="${id}"] ~ div[title="Buy"]`
+      )?.parentElement;
+
+      if (row) {
+        for (const child of row.children) {
+          if (child.innerText === "Cancel") {
+            child.click();
+            return true;
+          }
+        }
+
+        return false;
+      }
+
+      return false;
+    },
+
+    cancelSellCommand() {
+      const id = (this.coin1 + "/" + this.coin2).toUpperCase();
+      const row = document.querySelector(
+        `div[data-testid="tradeInfoTable"] div[title="${id}"] ~ div[title="Sell"]`
+      )?.parentElement;
+
+      if (row) {
+        for (const child of row.children) {
+          if (child.innerText === "Cancel") {
+            child.click();
+            return true;
+          }
+        }
+
+        return false;
+      }
+
+      return false;
+    },
+
     setupSocket() {
       const socket = new WebSocket("wss://stream.binance.com/stream");
 
