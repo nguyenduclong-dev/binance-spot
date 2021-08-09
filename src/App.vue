@@ -27,10 +27,10 @@
               {{ price | trimNumber }}
 
               <template v-if="nextAction === 'sell'">
-                <span class="ml-2">PNL: {{ pnl.percent | percent }}</span>
                 <span class="ml-2">
                   mua: {{ buyPrice | precision(precision) | trimNumber }} -
-                  {{ buyAmount | precision(precision) | trimNumber }}
+                  {{ buyAmount | precision(precision) | trimNumber }} -
+                  {{ pnl.percent | percent }}
                 </span>
               </template>
             </div>
@@ -139,7 +139,7 @@ export default {
       return Number(value).toString();
     },
     percent(value) {
-      return Number(Number(value).toFixed(2)) + " %";
+      return toFixedNoRound(value, 3) + " %";
     },
   },
 
