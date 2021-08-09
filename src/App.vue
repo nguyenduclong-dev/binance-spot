@@ -126,7 +126,7 @@
 <script>
 /* eslint-disable for-direction */
 /* eslint-disable vue/no-reserved-keys */
-import { rt } from "./utils";
+import { rt, toFixedNoRound } from "./utils";
 import app from "./app.json";
 
 export default {
@@ -488,12 +488,13 @@ export default {
       const inputAmount = form.querySelector("#FormRow-BUY-quantity");
 
       const price = +Math.max(
-        Number(buyPrice).toFixed(this.getStep("#FormRow-BUY-price").precision),
+        +toFixedNoRound(buyPrice, this.getStep("#FormRow-BUY-price").precision),
         this.getStep("#FormRow-BUY-price").min
       );
 
       const amount = +Math.max(
-        Number(this.budget / buyPrice).toFixed(
+        +toFixedNoRound(
+          this.budget / buyPrice,
           this.getStep("#FormRow-BUY-quantity").precision
         ),
         this.getStep("#FormRow-BUY-quantity").min
@@ -511,14 +512,16 @@ export default {
       const inputAmount = form.querySelector("#FormRow-SELL-quantity");
 
       const price = +Math.max(
-        Number(sellPrice).toFixed(
+        toFixedNoRound(
+          sellPrice,
           this.getStep("#FormRow-SELL-price").precision
         ),
         this.getStep("#FormRow-SELL-price").min
       );
 
       const amount = +Math.max(
-        Number(this.getCoin2Avbl()).toFixed(
+        toFixedNoRound(
+          this.getCoin2Avbl(),
           this.getStep("#FormRow-SELL-quantity").precision
         ),
         this.getStep("#FormRow-SELL-quantity").min
