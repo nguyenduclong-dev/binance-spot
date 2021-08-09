@@ -26,7 +26,7 @@
             <div class="text-md font-bold w-full">
               {{ price | trimNumber }}
 
-              <template v-if="action === 'sell'">
+              <template v-if="nextAction === 'sell'">
                 <span class="ml-2">PNL: {{ pnl.percent | percent }}</span>
                 <span class="ml-2">
                   mua: {{ buyPrice | precision(precision) | trimNumber }} -
@@ -185,7 +185,7 @@ export default {
       buyAmount: 0,
       sellPrice: 0,
       sellAmount: 0,
-      action: "buy", // sell
+      nextAction: "buy", // sell
       profit: 0,
       channel: "",
     };
@@ -268,7 +268,7 @@ export default {
      * @return {{percent: number, total: number}}
      */
     pnl() {
-      if (this.action === "sell") {
+      if (this.nextAction === "sell") {
         const percent = (this.price - this.buyPrice) / this.price;
         return {
           percent,
@@ -375,7 +375,7 @@ export default {
           budget: this.budget,
           buyPrice: this.buyPrice,
           sellPrice: this.sellPrice,
-          action: this.action,
+          nextAction: this.nextAction,
           profit: this.profit,
         })
       );
@@ -503,6 +503,7 @@ export default {
 
       inputPrice.value = price;
       inputAmount.value = amount;
+      this.nextAction = "sell";
 
       form.querySelector("#orderformBuyBtn").click();
     },
@@ -530,6 +531,7 @@ export default {
 
       inputPrice.value = price;
       inputAmount.value = amount;
+      this.nextAction = "buy";
 
       form.querySelector("#orderformSellBtn").click();
     },
