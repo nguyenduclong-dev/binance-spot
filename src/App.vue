@@ -62,17 +62,10 @@
                 :min="0"
                 v-model="budget"
                 controls-position="right"
-                :step="10 ** -precision"
+                :step="step"
               >
                 <span slot="prefix">s</span>
               </el-input-number>
-            </el-form-item>
-            <el-form-item label="Precision">
-              <el-input-number
-                :min="0"
-                v-model="precision"
-                controls-position="right"
-              />
             </el-form-item>
           </div>
 
@@ -148,7 +141,8 @@ export default {
       couple: "",
       coin1: "",
       coin2: "",
-      precision: 3,
+      precision: 0,
+      step: 1,
       budget: 0,
       code: "",
       scripts: {},
@@ -228,7 +222,7 @@ export default {
     this.couple = coin1 + coin2;
     this.load();
     this.setupSocket();
-
+    Object.assign(this, this.getStep("#FormRow-BUY-price"));
     this._interval = setInterval(this.tick30s, 30 * 1000);
   },
 
@@ -237,6 +231,19 @@ export default {
   },
 
   methods: {
+    getStep(id) {
+      const input = document.querySelector(id);
+      if (input) {
+        const step = +input.getAttribute("step");
+        const min = +input.getAttribute("min");
+        const precision = +Math.log10(step);
+
+        return { step, precision, min };
+      }
+
+      return { step: 0, precision: 0, min: 0 };
+    },
+
     handleDragStart(event) {
       this.drag = {
         onDrag: true,
@@ -312,7 +319,6 @@ export default {
           couple: this.couple,
           coin1: this.coin1,
           coin2: this.coin2,
-          precision: this.precision,
           active: this.active,
           code: this.code,
         })
@@ -352,9 +358,34 @@ export default {
       this.socket = socket;
     },
 
+    getAmount() {},
+
     buy() {
       const form = document.querySelector("#orderformBuyBtn").parentElement;
-      console.log(form);
+      const inputPrice = form.querySelector("#FormRow-BUY-price");
+      const inputAmount = form.querySelector("#FormRow-BUY-quantity");
+
+      const price = +Math.max(
+        Number(this.price).toFixed(
+          this.getStep("#FormRow-BUY-price").precision
+        ),
+        this.getStep("#FormRow-BUY-price").min
+      );
+
+      const amount = +Math.min(
+        Math.max(
+          Number(this.price).toFixed(
+            this.getStep("#FormRow-BUY-quantity").precision
+          ),
+          this.getStep("#FormRow-BUY-quantity").min
+        ),
+        this.budget
+      );
+
+      console.log(form, price, amount);
+
+      inputPrice.value = price;
+      inputAmount.value = amount;
     },
 
     sell() {},
