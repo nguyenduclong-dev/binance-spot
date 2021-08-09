@@ -2,7 +2,7 @@
   <div class="container">
     <div v-if="mode === 'mini'" class="mini">
       <span class="text-lg mr-2">
-        {{ price }}
+        {{ price | trimNumber }}
       </span>
 
       <el-button
@@ -323,6 +323,7 @@ export default {
           coin2: this.coin2,
           active: this.active,
           code: this.code,
+          budget: this.budget,
         })
       );
 
