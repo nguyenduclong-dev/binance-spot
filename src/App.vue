@@ -455,22 +455,18 @@ export default {
           this.price = item.p;
         }
 
-        if (message.stream === this.channel) {
+        if (
+          message.stream === this.channel &&
+          message.data.s === this.couple.toUpperCase()
+        ) {
           const data = message.data;
-          if (
-            data.S === "SELL" &&
-            data.X === "FILLED" &&
-            this.s === this.couple.toUpperCase()
-          ) {
+
+          if (data.S === "SELL" && data.X === "FILLED") {
             this.sellPrice = +data.p;
             this.sellAmount = +data.z;
             this.profit =
               this.profit + (this.sellPrice - this.buyPrice) * this.sellAmount;
-          } else if (
-            data.S === "BUY" &&
-            data.x === "FILLED" &&
-            this.s === this.couple.toUpperCase()
-          ) {
+          } else if (data.S === "BUY" && data.x === "FILLED") {
             this.buyPrice = +data.p;
             this.buyAmount = +data.z;
           }
