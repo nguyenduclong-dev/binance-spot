@@ -464,8 +464,11 @@ export default {
           if (data.S === "SELL" && data.X === "FILLED") {
             this.sellPrice = +data.p;
             this.sellAmount = +data.z;
-            this.profit =
-              this.profit + (this.sellPrice - this.buyPrice) * this.sellAmount;
+            if (this.buyPrice && this.buyAmount) {
+              this.profit =
+                this.profit +
+                (this.sellPrice - this.buyPrice) * this.sellAmount;
+            }
           } else if (data.S === "BUY" && data.x === "FILLED") {
             this.buyPrice = +data.p;
             this.buyAmount = +data.z;
