@@ -667,9 +667,9 @@ export default {
       const inputPrice = form.querySelector("#FormRow-BUY-price");
       const inputAmount = form.querySelector("#FormRow-BUY-quantity");
 
-      const price = +Math.max(
-        +toFixedNoRound(buyPrice, this.getStep("#FormRow-BUY-price").precision),
-        this.getStep("#FormRow-BUY-price").min
+      const price = toFixedNoRound(
+        buyPrice,
+        this.getStep("#FormRow-BUY-price").precision
       );
 
       const amount = +Math.min(
@@ -695,12 +695,9 @@ export default {
       const inputPrice = form.querySelector("#FormRow-SELL-price");
       const inputAmount = form.querySelector("#FormRow-SELL-quantity");
 
-      const price = +Math.max(
-        toFixedNoRound(
-          sellPrice,
-          this.getStep("#FormRow-SELL-price").precision
-        ),
-        this.getStep("#FormRow-SELL-price").min
+      const price = toFixedNoRound(
+        sellPrice,
+        this.getStep("#FormRow-SELL-price").precision
       );
 
       const amount = +Math.max(
