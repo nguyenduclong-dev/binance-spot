@@ -23,6 +23,7 @@
         <div :class="[nextAction === 'sell' ? 'text-danger' : 'text-success']">
           {{ nextAction | uppercase }}
         </div>
+        <el-divider direction="vertical"></el-divider>
         <template v-if="nextAction === 'sell'">
           <span class="ml-2">
             <span class="text-primary">[BUY]</span>
@@ -40,7 +41,6 @@
       </div>
 
       <div
-        v-if="active"
         class="mt-2 flex justify-center items-center border"
         style="border-radius: 24px; padding: 4px 12px;background-color: #fff; margin-left: auto"
       >
@@ -109,7 +109,7 @@
 
             <div>
               <template v-if="nextAction === 'sell'">
-                <span class="ml-2">
+                <span>
                   <span class="text-primary">[BUY]</span>
                   {{ buyPrice | precision(precision) | trimNumber }}
                   <el-divider direction="vertical"></el-divider>
