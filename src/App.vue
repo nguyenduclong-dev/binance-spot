@@ -208,6 +208,7 @@ export default {
       nextAction: "buy", // sell
       profit: 0,
       channel: "",
+      filled: false,
     };
   },
 
@@ -430,6 +431,7 @@ export default {
           sellAmount: this.sellAmount,
           nextAction: this.nextAction,
           profit: this.profit,
+          filled: this.filled,
         })
       );
 
@@ -512,10 +514,12 @@ export default {
                 this.profit +
                 (this.sellPrice - this.buyPrice) * this.sellAmount;
             }
+            this.filled = true;
             this.save();
           } else if (data.S === "BUY" && data.X === "FILLED") {
             this.buyPrice = +data.p;
             this.buyAmount = +data.z;
+            this.filled = true;
             this.save();
           }
         }
@@ -547,6 +551,7 @@ export default {
       inputPrice.value = price;
       inputAmount.value = amount;
       this.nextAction = "sell";
+      this.filled = false;
 
       form.querySelector("#orderformBuyBtn").click();
     },
@@ -575,6 +580,7 @@ export default {
       inputPrice.value = price;
       inputAmount.value = amount;
       this.nextAction = "buy";
+      this.filled = false;
 
       form.querySelector("#orderformSellBtn").click();
     },
