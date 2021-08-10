@@ -49,6 +49,8 @@
           :class="[profit < 0 ? 'text-danger' : 'text-success']"
         >
           {{ profit | precision(6) | trimNumber }} {{ coin2 }}
+          <el-divider direction="vertical"></el-divider>
+          {{ ((profit / budget) * 100) | precision(6) | trimNumber | percent }}
         </div>
       </div>
     </div>
@@ -133,6 +135,10 @@
               :class="[profit < 0 ? 'text-danger' : 'text-success']"
             >
               Lợi nhuận: {{ profit | precision(6) | trimNumber }} {{ coin2 }}
+              <el-divider direction="vertical"></el-divider>
+              {{
+                ((profit / budget) * 100) | precision(6) | trimNumber | percent
+              }}
             </div>
           </div>
 
