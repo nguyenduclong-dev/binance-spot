@@ -32,7 +32,8 @@
             {{ buyAmount | precision(precision) | trimNumber }}
             <el-divider direction="vertical"></el-divider>
             <span :class="[pnl.percent < 0 ? 'text-danger' : 'text-success']">
-              {{ pnl.percent | percent }}
+              {{ pnl.percent | percent }} ~
+              {{ (price - buyPrice) * buyAmount }} {{ coin2 }}
             </span>
           </span>
         </template>
@@ -47,7 +48,7 @@
           class="text-md font-bold w-full"
           :class="[profit < 0 ? 'text-danger' : 'text-success']"
         >
-          {{ profit | trimNumber }} {{ coin2 }}
+          {{ profit | precision(6) | trimNumber }} {{ coin2 }}
         </div>
       </div>
     </div>
