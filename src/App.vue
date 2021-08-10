@@ -174,7 +174,7 @@ export default {
       step: 1,
       budget: 0,
       code: "",
-      customHandle: {},
+      customHandle: null,
       dialogStyle: {
         top: "50%",
         left: "50%",
