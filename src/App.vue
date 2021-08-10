@@ -1,15 +1,42 @@
 <template>
   <div class="container">
     <div v-if="mode === 'mini'" class="mini">
-      <span class="text-lg mr-2">
-        {{ price | trimNumber }}
-      </span>
+      <div
+        class="flex justify-center items-center border"
+        style="border-radius: 24px; padding: 0 12px;background-color: #fff;"
+      >
+        <span class="text-lg mr-2">
+          {{ price | trimNumber }}
+        </span>
 
-      <el-button
-        type="text"
-        icon="el-icon-full-screen"
-        @click="mode = 'full'"
-      ></el-button>
+        <el-button
+          type="text"
+          icon="el-icon-full-screen"
+          @click="mode = 'full'"
+        ></el-button>
+      </div>
+
+      <div
+        v-if="active"
+        class="mt-2 flex justify-center items-center border"
+        style="border-radius: 24px; padding: 4px 12px;background-color: #fff;"
+      >
+        <div :class="[nextAction === 'sell' ? 'text-danger' : 'text-success']">
+          {{ nextAction | uppercase }}
+        </div>
+        <template v-if="nextAction === 'sell'">
+          <span class="ml-2">
+            mua:
+            {{ buyPrice | precision(precision) | trimNumber }}
+            <el-divider direction="vertical"></el-divider>
+            {{ buyAmount | precision(precision) | trimNumber }}
+            <el-divider direction="vertical"></el-divider>
+            <span :class="[pnl.percent < 0 ? 'text-danger' : 'text-success']">
+              {{ pnl.percent | percent }}
+            </span>
+          </span>
+        </template>
+      </div>
     </div>
 
     <div v-else class="full" :style="dialogStyle" ref="container">
@@ -634,20 +661,10 @@ export default {
 
 .container {
   .mini {
-    display: flex;
-    gap: 4px;
     position: fixed;
     right: 24px;
     top: 80px;
     z-index: 2000;
-    border-radius: 32px;
-    height: 32px;
-    padding: 0 12px;
-    background-color: white;
-    border: 1px solid #dcdfe6;
-    display: flex;
-    justify-content: center;
-    align-items: center;
   }
 
   .full {
