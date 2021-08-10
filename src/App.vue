@@ -641,12 +641,13 @@ export default {
         this.getStep("#FormRow-BUY-price").min
       );
 
-      const amount = +Math.max(
+      const amount = +Math.min(
         +toFixedNoRound(
           this.budget / buyPrice,
           this.getStep("#FormRow-BUY-quantity").precision
         ),
-        this.getStep("#FormRow-BUY-quantity").min
+        this.budget,
+        this.getCoin2Avbl()
       );
 
       inputPrice.value = price;
@@ -663,12 +664,12 @@ export default {
       const inputPrice = form.querySelector("#FormRow-SELL-price");
       const inputAmount = form.querySelector("#FormRow-SELL-quantity");
 
-      const price = +Math.min(
+      const price = +Math.max(
         toFixedNoRound(
           sellPrice,
           this.getStep("#FormRow-SELL-price").precision
         ),
-        this.getCoin2Avbl()
+        this.getStep("#FormRow-SELL-price").min
       );
 
       const amount = +Math.max(
@@ -676,7 +677,7 @@ export default {
           this.getCoin2Avbl(),
           this.getStep("#FormRow-SELL-quantity").precision
         ),
-        this.getStep("#FormRow-SELL-quantity").min
+        this.getCoin1Avbl()
       );
 
       inputPrice.value = price;
@@ -691,7 +692,7 @@ export default {
     getCoin1Avbl() {
       return Number(
         document
-          .querySelector('.balance span[data-testid="baseAssetAmount"]')
+          .querySelector('.balance span[data-testid="quoteAssetAmount"]')
           .innerText.split(" ")
           .shift()
       );
@@ -700,7 +701,7 @@ export default {
     getCoin2Avbl() {
       return Number(
         document
-          .querySelector('.balance span[data-testid="quoteAssetAmount"]')
+          .querySelector('.balance span[data-testid="baseAssetAmount"]')
           .innerText.split(" ")
           .shift()
       );
