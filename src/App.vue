@@ -183,9 +183,9 @@
               height="300"
             ></editor>
           </el-form-item>
-
-          <el-switch v-model="active" active-text="Kích hoạt"></el-switch>
         </el-form>
+
+        <el-switch v-model="active" active-text="Kích hoạt"></el-switch>
 
         <div class="flex items-center justify-center w-full mt-4">
           <div>
