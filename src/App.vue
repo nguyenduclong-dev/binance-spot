@@ -165,6 +165,9 @@ export default {
     percent(value) {
       return toFixedNoRound(value, 3) + " %";
     },
+    mul(value, n = 100) {
+      return value * n;
+    },
   },
 
   components: {
@@ -241,7 +244,7 @@ export default {
           item.T >= now - 10 * 1000 - 10 * 1000
         ) {
           a10s = this.price - item.p;
-          pa10s = a10s / item.p;
+          pa10s = (a10s / item.p) * 100;
         }
 
         if (
@@ -250,7 +253,7 @@ export default {
           item.T >= now - 60 * 1000 - 10 * 1000
         ) {
           am = this.price - item.p;
-          pam = am / item.p;
+          pam = (am / item.p) * 100;
         }
 
         if (
@@ -259,7 +262,7 @@ export default {
           item.T >= now - 15 * 60 * 1000 - 60 * 1000
         ) {
           a15m = this.price - item.p;
-          pa15m = a15m / item.p;
+          pa15m = (a15m / item.p) * 100;
         }
 
         if (
@@ -268,7 +271,7 @@ export default {
           item.T >= now - 60 * 60 * 1000 - 60 * 1000
         ) {
           ah = this.price - item.p;
-          pah = ah / item.p;
+          pah = (ah / item.p) * 100;
           break;
         }
       }
