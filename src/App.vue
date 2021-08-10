@@ -362,9 +362,13 @@ export default {
     },
 
     codeToCustomHandle() {
-      if (this.code) {
-        this.customHandle = rt(this.code, this);
-      } else {
+      try {
+        if (this.code) {
+          this.customHandle = rt(this.code, this);
+        } else {
+          this.customHandle = null;
+        }
+      } catch (error) {
         this.customHandle = null;
       }
     },
