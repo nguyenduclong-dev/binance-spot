@@ -20,7 +20,7 @@
           @mousedown="handleDragStart"
           @mouseup="handleDragEnd"
           @mousemove="handleDrag"
-          style="padding: 18px 20px; margin: -18px -20px;"
+          style="padding: 18px 20px; margin: -18px -20px; position: relative;"
         >
           <div class="flex flex-wrap flex-1 justify-start">
             <div class="text-md font-bold w-full">
@@ -44,46 +44,45 @@
             <div class="text-md font-bold w-full">
               Lợi nhuận {{ profit | trimNumber }} {{ coin2 }}
             </div>
-            <div>
-              <span>
+            <div class="w-full flex flex-wrap">
+              <span class="w-1/2">
                 <span class="mr">a10s:</span>
                 {{ a10s | precision(precision) | trimNumber }}({{
                   ap.a10s | precision(precision) | trimNumber | percent
                 }})
               </span>
-              <span class="ml">
+              <span class="w-1/2">
                 <span class="mr">am:</span>
                 {{ am | precision(precision) | trimNumber }}({{
                   ap.am | precision(precision) | trimNumber | percent
                 }})
               </span>
-              <span class="ml">
+              <span class="w-1/2">
                 <span class="mr">a15m:</span>
                 {{ a15m | precision(precision) | trimNumber }}({{
                   ap.a15m | precision(precision) | trimNumber | percent
                 }})
               </span>
-              <span class="ml">
+              <span class="w-1/2">
                 <span class="mr">ah:</span>
                 {{ ah | precision(precision) | trimNumber }}({{
                   ap.ah | precision(precision) | trimNumber | percent
                 }})
               </span>
-              <span class="flex-1"></span>
-            </div>
-            <div class="w-full" style="font-size: 12px;">
-              Version: {{ app.version }}
             </div>
           </div>
           <el-button
             icon="el-icon-close"
-            class="mb-auto"
-            style="float: right; padding: 3px 0"
+            style="position: absolute; top : 6px; right :8px; padding: 12px"
             type="text"
             @click="mode = 'mini'"
+          ></el-button>
+
+          <span
+            style="font-size: 12px; position: absolute; bottom : 2px; right: 18px;"
           >
-            Close
-          </el-button>
+            Version: {{ app.version }}
+          </span>
         </div>
 
         <el-form class="form">
@@ -264,7 +263,7 @@ export default {
       Object.assign(this, { a10s, am, a15m, ah });
       Object.assign(this.ap, { a10s: pa10s, am: pam, a15m: pa15m, ah: pah });
 
-      if (this.customHandle) this.customHandle();
+      if (this.active && this.customHandle) this.customHandle();
     },
   },
 
