@@ -307,7 +307,7 @@ export default {
      */
     pnl() {
       if (this.nextAction === "sell" && this.buyPrice && this.buyAmount) {
-        const percent = (this.price - this.buyPrice) / this.price;
+        const percent = ((this.price - this.buyPrice) / this.price) * 100;
         return {
           percent,
           total: (this.price - this.buyPrice) * this.buyAmount,
