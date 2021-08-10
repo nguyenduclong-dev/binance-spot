@@ -552,6 +552,7 @@ export default {
       inputAmount.value = amount;
       this.nextAction = "sell";
       this.filled = false;
+      this.save();
 
       form.querySelector("#orderformBuyBtn").click();
     },
@@ -581,6 +582,7 @@ export default {
       inputAmount.value = amount;
       this.nextAction = "buy";
       this.filled = false;
+      this.save();
 
       form.querySelector("#orderformSellBtn").click();
     },
