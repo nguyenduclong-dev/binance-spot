@@ -293,7 +293,7 @@ export default {
      * @return {{percent: number, total: number}}
      */
     pnl() {
-      if (this.nextAction === "sell") {
+      if (this.nextAction === "sell" && this.buyPrice && this.buyAmount) {
         const percent = (this.price - this.buyPrice) / this.price;
         return {
           percent,
