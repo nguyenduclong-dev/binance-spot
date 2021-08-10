@@ -279,8 +279,8 @@ export default {
     this.coin2 = coin2;
     this.couple = coin1 + coin2;
     this.getPrices();
-    this.setupSocket();
     this.load();
+    this.setupSocket();
     this._interval = setInterval(this.tick30s, 30 * 1000);
     setTimeout(() => {
       Object.assign(this, this.getStep("#FormRow-BUY-total"));
