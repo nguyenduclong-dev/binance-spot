@@ -117,7 +117,7 @@
 
         <div class="flex items-center justify-center w-full mt-4">
           <div>
-            <el-button type="success" @click="save(false)">Lưu</el-button>
+            <el-button type="success" @click="handleSave">Lưu</el-button>
             <el-button @click="handleClear">
               Clear
             </el-button>
@@ -400,7 +400,13 @@ export default {
       }
     },
 
-    save(silient = true) {
+    handleSave() {
+      this.save();
+      this.codeToCustomHandle();
+      this.$message.success("Đã lưu");
+    },
+
+    save() {
       localStorage.setItem(
         `trade.${this.couple}`,
         JSON.stringify({
@@ -424,12 +430,6 @@ export default {
       );
 
       localStorage.setItem("trade.channel", this.channel);
-
-      this.codeToCustomHandle();
-
-      if (!silient) {
-        this.$message.success("Đã lưu");
-      }
     },
 
     cancelBuyCommand() {
