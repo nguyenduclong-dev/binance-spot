@@ -612,7 +612,7 @@ export default {
                 (this.sellPrice - this.buyPrice) * this.sellAmount;
             }
             this.filled = true;
-            this.nextAction = "BUY";
+            this.nextAction = "buy";
             this.save();
           } else if (data.S === "BUY" && data.X === "FILLED") {
             console.log("BUY FILLED", data);
@@ -620,7 +620,7 @@ export default {
             this.buyPrice = +data.p;
             this.buyAmount = +data.z;
             this.filled = true;
-            this.nextAction = "SELL";
+            this.nextAction = "sell";
             this.save();
           }
         }
