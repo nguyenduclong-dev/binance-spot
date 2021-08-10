@@ -37,6 +37,19 @@
           </span>
         </template>
       </div>
+
+      <div
+        v-if="active"
+        class="mt-2 flex justify-center items-center border"
+        style="border-radius: 24px; padding: 4px 12px;background-color: #fff; margin-left: auto"
+      >
+        <div
+          class="text-md font-bold w-full"
+          :class="[profit < 0 ? 'text-danger' : 'text-success']"
+        >
+          {{ profit | trimNumber }} {{ coin2 }}
+        </div>
+      </div>
     </div>
 
     <div v-else class="full" :style="dialogStyle" ref="container">
@@ -665,6 +678,8 @@ export default {
     right: 24px;
     top: 80px;
     z-index: 2000;
+    display: flex;
+    flex-direction: column;
   }
 
   .full {
