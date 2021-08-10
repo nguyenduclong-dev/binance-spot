@@ -26,7 +26,7 @@
         </div>
         <template v-if="nextAction === 'sell'">
           <span class="ml-2">
-            mua:
+            <span class="text-primary">[BUY]</span>
             {{ buyPrice | precision(precision) | trimNumber }}
             <el-divider direction="vertical"></el-divider>
             {{ buyAmount | precision(precision) | trimNumber }}
@@ -67,27 +67,6 @@
           <div class="flex flex-wrap flex-1 justify-start">
             <div class="text-md font-bold w-full">
               {{ price | trimNumber }}
-
-              <template v-if="nextAction === 'sell'">
-                <span class="ml-2">
-                  mua:
-                  {{ buyPrice | precision(precision) | trimNumber }}
-                  <el-divider direction="vertical"></el-divider>
-                  {{ buyAmount | precision(precision) | trimNumber }}
-                  <el-divider direction="vertical"></el-divider>
-                  <span
-                    :class="[pnl.percent < 0 ? 'text-danger' : 'text-success']"
-                  >
-                    {{ pnl.percent | percent }} ~
-                    {{
-                      ((price - buyPrice) * buyAmount)
-                        | precision(6)
-                        | trimNumber
-                    }}
-                    {{ coin2 }}
-                  </span>
-                </span>
-              </template>
             </div>
 
             <div class="w-full flex flex-wrap">
@@ -123,6 +102,29 @@
               {{ nextAction | uppercase }}
             </div>
 
+            <div>
+              <template v-if="nextAction === 'sell'">
+                <span class="ml-2">
+                  <span class="text-primary">[BUY]</span>
+                  {{ buyPrice | precision(precision) | trimNumber }}
+                  <el-divider direction="vertical"></el-divider>
+                  {{ buyAmount | precision(precision) | trimNumber }}
+                  <el-divider direction="vertical"></el-divider>
+                  <span
+                    :class="[pnl.percent < 0 ? 'text-danger' : 'text-success']"
+                  >
+                    {{ pnl.percent | percent }} ~
+                    {{
+                      ((price - buyPrice) * buyAmount)
+                        | precision(6)
+                        | trimNumber
+                    }}
+                    {{ coin2 }}
+                  </span>
+                </span>
+              </template>
+            </div>
+
             <div
               class="text-md font-bold w-full"
               :class="[pnl.percent < 0 ? 'text-danger' : 'text-success']"
@@ -130,11 +132,19 @@
               Lợi nhuận: {{ profit | precision(6) | trimNumber }} {{ coin2 }}
             </div>
           </div>
+
           <el-button
             icon="el-icon-close"
             style="position: absolute; top : 6px; right :8px; padding: 12px"
             type="text"
             @click="mode = 'mini'"
+          ></el-button>
+
+          <el-button
+            :icon="expand ? 'el-icon-caret-bottom' : 'el-icon-caret-top'"
+            style="position: absolute; top : 48px; right :8px; padding: 12px"
+            type="text"
+            @click="expand = !expand"
           ></el-button>
 
           <span
@@ -144,7 +154,7 @@
           </span>
         </div>
 
-        <el-form class="form">
+        <el-form v-if="expand" class="form">
           <el-form-item label="ChannelId">
             <el-input v-model="channel"></el-input>
           </el-form-item>
@@ -230,6 +240,7 @@ export default {
 
   data() {
     return {
+      expand: true,
       app,
       active: false,
       mode: "mini", // mini, normal, full
