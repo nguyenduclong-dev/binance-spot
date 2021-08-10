@@ -212,32 +212,32 @@ export default {
 
         if (
           isNaN(a10s) &&
-          item.t <= now - 10 * 1000 &&
-          item.t >= now - 10 * 1000 - 10 * 1000
+          item.T <= now - 10 * 1000 &&
+          item.T >= now - 10 * 1000 - 10 * 1000
         ) {
           a10s = this.price - item.p;
         }
 
         if (
           isNaN(am) &&
-          item.t <= now - 60 * 1000 &&
-          item.t >= now - 60 * 1000 - 10 * 1000
+          item.T <= now - 60 * 1000 &&
+          item.T >= now - 60 * 1000 - 10 * 1000
         ) {
           am = this.price - item.p;
         }
 
         if (
           isNaN(a15m) &&
-          item.t <= now - 15 * 60 * 1000 &&
-          item.t >= now - 15 * 60 * 1000 - 60 * 1000
+          item.T <= now - 15 * 60 * 1000 &&
+          item.T >= now - 15 * 60 * 1000 - 60 * 1000
         ) {
           a15m = this.price - item.p;
         }
 
         if (
           isNaN(ah) &&
-          item.t <= now - 60 * 60 * 1000 &&
-          item.t >= now - 60 * 60 * 1000 - 60 * 1000
+          item.T <= now - 60 * 60 * 1000 &&
+          item.T >= now - 60 * 60 * 1000 - 60 * 1000
         ) {
           ah = this.price - item.p;
           break;
@@ -291,8 +291,9 @@ export default {
   methods: {
     async getPrices() {
       const prices = await fetch(
-        "https://www.binance.com/api/v1/aggTrades?limit=500&symbol=BTCBUSD"
+        "https://www.binance.com/api/v1/aggTrades?limit=10000&symbol=BTCBUSD"
       ).then((res) => res.json());
+
       this.prices = prices;
     },
 
@@ -361,13 +362,13 @@ export default {
     },
 
     tick30s() {
-      // this.removePast1h();
+      this.removePast1h();
       this.save();
     },
 
     removePast1h() {
       const index =
-        this.prices.findIndex((item) => item.t >= Date.now() - 60 * 60 * 1000) -
+        this.prices.findIndex((item) => item.T >= Date.now() - 60 * 60 * 1000) -
         1;
 
       if (index >= 0) {
@@ -465,12 +466,8 @@ export default {
         const message = JSON.parse(event.data);
 
         if (message.stream === `${this.couple.toLowerCase()}@aggTrade`) {
-          const item = {
-            p: message.data.p,
-            t: message.data.T,
-          };
-          this.prices.push(item);
-          this.price = item.p;
+          this.prices.push(message.data);
+          this.price = message.item.p;
         }
 
         if (
