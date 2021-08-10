@@ -339,6 +339,8 @@ export default {
     codeToCustomHandle() {
       if (this.code) {
         this.customHandle = rt(this.code, this);
+      } else {
+        this.customHandle = null;
       }
     },
 
