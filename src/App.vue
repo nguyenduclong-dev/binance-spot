@@ -55,7 +55,7 @@
     </div>
 
     <div v-else class="full" :style="dialogStyle" ref="container">
-      <el-card>
+      <el-card ref="card">
         <div
           slot="header"
           class="flex gap"
@@ -292,6 +292,18 @@ export default {
   },
 
   watch: {
+    mode(value) {
+      this.$nextTick(() => {
+        if (value === "full") {
+          const card = this.$refs.card.$el;
+          const rect = card.getBoundingClientRect();
+          this.dialogStyle = {
+            top: rect.top + "px",
+            left: rect.left + "px",
+          };
+        }
+      });
+    },
     prices() {
       const now = Date.now();
       // prettier-ignore
