@@ -223,8 +223,14 @@
           <div class="flex-1"></div>
 
           <div>
-            <el-button type="success" @click="buy(price)">Mua</el-button>
-            <el-button type="danger" @click="sell(price)">
+            <el-button
+              type="success"
+              @click="buy(price)"
+              icon="el-icon-sold-out"
+            >
+              Mua
+            </el-button>
+            <el-button type="danger" @click="sell(price)" icon="el-icon-sell">
               Bán
             </el-button>
           </div>
