@@ -57,7 +57,7 @@
       <div class="flex mt-2" style="margin-left: auto">
         <el-tooltip content="Mua">
           <el-button
-            @click="buy"
+            @click="buy(price)"
             icon="el-icon-sold-out"
             type="success"
             circle
@@ -65,7 +65,7 @@
         </el-tooltip>
         <el-tooltip content="Bán">
           <el-button
-            @click="sell"
+            @click="sell(price)"
             icon="el-icon-sell"
             type="danger"
             circle
