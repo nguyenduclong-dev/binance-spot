@@ -672,6 +672,15 @@ export default {
         this.getStep("#FormRow-BUY-price").precision
       );
 
+      console.log(
+        this.budget,
+        buyPrice,
+        +toFixedNoRound(
+          this.budget / buyPrice,
+          this.getStep("#FormRow-BUY-quantity").precision
+        )
+      );
+
       const amount = +Math.min(
         +toFixedNoRound(
           this.budget / buyPrice,

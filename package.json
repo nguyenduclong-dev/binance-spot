@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "vue-cli-service serve",
-    "serve": "vue-cli-service serve",
+    "serve": "node ./server",
     "build": "vue-cli-service build",
     "update": "node ./update.js",
     "publish": "yarn update && yarn build && git add . && git commit -m \"update\" && yarn push",
@@ -13,7 +13,9 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
+    "cors": "^2.8.5",
     "element-ui": "^2.15.5",
+    "express": "^4.17.1",
     "vue": "^2.6.11",
     "vue2-ace-editor": "^0.0.15"
   },
