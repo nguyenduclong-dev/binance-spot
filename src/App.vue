@@ -681,6 +681,8 @@ export default {
         this.getCoin2Avbl()
       );
 
+      console.log(price, amount);
+
       inputPrice.value = price;
       inputAmount.value = amount;
       this.nextAction = "sell";
@@ -707,6 +709,8 @@ export default {
         ),
         this.getCoin1Avbl()
       );
+
+      console.log(price, amount);
 
       inputPrice.value = price;
       inputAmount.value = amount;
