@@ -2,8 +2,8 @@
   <div class="container">
     <div v-if="mode === 'mini'" class="mini">
       <div
-        class="flex justify-center items-center border"
-        style="border-radius: 24px; padding: 0 12px;background-color: #fff;"
+        class="flex items-center border"
+        style="border-radius: 24px; padding: 0 12px;background-color: #fff; margin-left: auto"
       >
         <span class="text-lg mr-2">
           {{ price | trimNumber }}
@@ -19,7 +19,7 @@
       <div
         v-if="active"
         class="mt-2 flex justify-center items-center border"
-        style="border-radius: 24px; padding: 4px 12px;background-color: #fff;"
+        style="border-radius: 24px; padding: 4px 12px;background-color: #fff; margin-left: auto"
       >
         <div :class="[nextAction === 'sell' ? 'text-danger' : 'text-success']">
           {{ nextAction | uppercase }}
