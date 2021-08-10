@@ -53,6 +53,25 @@
           {{ ((profit / budget) * 100) | precision(6) | trimNumber | percent }}
         </div>
       </div>
+
+      <div class="flex mt-2" style="margin-left: auto">
+        <el-tooltip content="Mua">
+          <el-button
+            @click="buy"
+            icon="el-icon-sold-out"
+            type="success"
+            circle
+          ></el-button>
+        </el-tooltip>
+        <el-tooltip content="Bán">
+          <el-button
+            @click="sell"
+            icon="el-icon-sell"
+            type="danger"
+            circle
+          ></el-button>
+        </el-tooltip>
+      </div>
     </div>
 
     <div v-else class="full" :style="dialogStyle" ref="container">
