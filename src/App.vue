@@ -70,6 +70,12 @@
                 }})
               </span>
             </div>
+
+            <div
+              :class="[nextAction === 'sell' ? 'text-danger' : 'text-success']"
+            >
+              {{ nextAction | uppercase }}
+            </div>
           </div>
           <el-button
             icon="el-icon-close"
@@ -146,6 +152,10 @@ import app from "./app.json";
 export default {
   name: "App",
   filters: {
+    uppercase(value) {
+      if (typeof value === "string") return value.toUpperCase();
+      return value;
+    },
     precision(value, fixed = 0) {
       return Number(value).toFixed(fixed);
     },
