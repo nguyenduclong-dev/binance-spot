@@ -47,19 +47,27 @@
             <div>
               <span>
                 <span class="mr">a10s:</span>
-                {{ a10s | precision(precision) | trimNumber }}
+                {{ a10s | precision(precision) | trimNumber }}({{
+                  ap.a10s | precision(precision) | trimNumber | percent
+                }})
               </span>
               <span class="ml">
                 <span class="mr">am:</span>
-                {{ am | precision(precision) | trimNumber }}
+                {{ am | precision(precision) | trimNumber }}({{
+                  ap.am | precision(precision) | trimNumber | percent
+                }})
               </span>
               <span class="ml">
                 <span class="mr">a15m:</span>
-                {{ a15m | precision(precision) | trimNumber }}
+                {{ a15m | precision(precision) | trimNumber }}({{
+                  ap.a15m | precision(precision) | trimNumber | percent
+                }})
               </span>
               <span class="ml">
                 <span class="mr">ah:</span>
-                {{ ah | precision(precision) | trimNumber }}
+                {{ ah | precision(precision) | trimNumber }}({{
+                  ap.ah | precision(precision) | trimNumber | percent
+                }})
               </span>
               <span class="flex-1"></span>
             </div>
@@ -164,6 +172,13 @@ export default {
       am: NaN, // 1 minute
       a15m: NaN, // 15 minutes
       ah: NaN, // 1 hour
+      ap: {
+        as: NaN,
+        a10s: NaN, // 10s
+        am: NaN, // 1 minute
+        a15m: NaN, // 15 minutes
+        ah: NaN, // 1 hour
+      },
       prices: [],
       price: 0,
       socket: null,
@@ -200,10 +215,8 @@ export default {
   watch: {
     prices() {
       const now = Date.now();
-      let a10s = NaN,
-        am = NaN,
-        a15m = NaN,
-        ah = NaN;
+      // prettier-ignore
+      let a10s = NaN, pa10s = NaN, am = NaN, pam = NaN, a15m = NaN, pa15m = NaN, ah = NaN, pah = NaN;
 
       if (!this.prices.length) return;
 
@@ -216,6 +229,7 @@ export default {
           item.T >= now - 10 * 1000 - 10 * 1000
         ) {
           a10s = this.price - item.p;
+          pa10s = a10s / item.p;
         }
 
         if (
@@ -224,6 +238,7 @@ export default {
           item.T >= now - 60 * 1000 - 10 * 1000
         ) {
           am = this.price - item.p;
+          pam = am / item.p;
         }
 
         if (
@@ -232,6 +247,7 @@ export default {
           item.T >= now - 15 * 60 * 1000 - 60 * 1000
         ) {
           a15m = this.price - item.p;
+          pa15m = a15m / item.p;
         }
 
         if (
@@ -240,11 +256,13 @@ export default {
           item.T >= now - 60 * 60 * 1000 - 60 * 1000
         ) {
           ah = this.price - item.p;
+          pah = ah / item.p;
           break;
         }
       }
 
       Object.assign(this, { a10s, am, a15m, ah });
+      Object.assign(this.ap, { a10s: pa10s, am: pam, a15m: pa15m, ah: pah });
 
       if (this.customHandle) this.customHandle();
     },
@@ -291,10 +309,12 @@ export default {
   methods: {
     async getPrices() {
       const prices = await fetch(
-        "https://www.binance.com/api/v1/aggTrades?limit=10000&symbol=BTCBUSD"
+        "https://www.binance.com/api/v1/aggTrades?limit=10000&symbol=" +
+          this.couple.toUpperCase()
       ).then((res) => res.json());
 
       this.prices = prices;
+      this.price = prices[prices.length - 1].p;
     },
 
     getStep(id) {
