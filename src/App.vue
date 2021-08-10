@@ -210,6 +210,7 @@ export default {
       channel: "",
       filled: false,
       histories: [],
+      wait: false,
     };
   },
 
