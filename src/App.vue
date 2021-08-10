@@ -467,7 +467,7 @@ export default {
 
         if (message.stream === `${this.couple.toLowerCase()}@aggTrade`) {
           this.prices.push(message.data);
-          this.price = message.item.p;
+          this.price = message.data.p;
         }
 
         if (
