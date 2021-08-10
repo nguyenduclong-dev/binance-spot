@@ -33,7 +33,8 @@
             <el-divider direction="vertical"></el-divider>
             <span :class="[pnl.percent < 0 ? 'text-danger' : 'text-success']">
               {{ pnl.percent | percent }} ~
-              {{ (price - buyPrice) * buyAmount }} {{ coin2 }}
+              {{ ((price - buyPrice) * buyAmount) | precision(6) | trimNumber }}
+              {{ coin2 }}
             </span>
           </span>
         </template>
@@ -77,13 +78,19 @@
                   <span
                     :class="[pnl.percent < 0 ? 'text-danger' : 'text-success']"
                   >
-                    {{ pnl.percent | percent }}
+                    {{ pnl.percent | percent }} ~
+                    {{
+                      ((price - buyPrice) * buyAmount)
+                        | precision(6)
+                        | trimNumber
+                    }}
+                    {{ coin2 }}
                   </span>
                 </span>
               </template>
             </div>
             <div class="text-md font-bold w-full">
-              Lợi nhuận {{ profit | trimNumber }} {{ coin2 }}
+              Lợi nhuận {{ profit | precision(6) | trimNumber }} {{ coin2 }}
             </div>
             <div class="w-full flex flex-wrap">
               <span class="w-1/2">
