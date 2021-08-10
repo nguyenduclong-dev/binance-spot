@@ -158,7 +158,6 @@ export default {
   data() {
     return {
       app,
-      loaded: false,
       active: false,
       mode: "mini", // mini, normal, full
       a10s: NaN, // 10s
@@ -175,7 +174,7 @@ export default {
       step: 1,
       budget: 0,
       code: "",
-      scripts: {},
+      customHandle: {},
       dialogStyle: {
         top: "50%",
         left: "50%",
@@ -246,6 +245,8 @@ export default {
       }
 
       Object.assign(this, { a10s, am, a15m, ah });
+
+      if (this.customHandle) this.customHandle();
     },
   },
 
@@ -257,10 +258,10 @@ export default {
     this.coin1 = coin1;
     this.coin2 = coin2;
     this.couple = coin1 + coin2;
-    this.load();
+    this.getPrices();
     this.setupSocket();
+    this.load();
     this._interval = setInterval(this.tick30s, 30 * 1000);
-
     setTimeout(() => {
       Object.assign(this, this.getStep("#FormRow-BUY-total"));
     }, 1000);
@@ -288,6 +289,13 @@ export default {
   },
 
   methods: {
+    async getPrices() {
+      const prices = await fetch(
+        "https://www.binance.com/api/v1/aggTrades?limit=500&symbol=BTCBUSD"
+      ).then((res) => res.json());
+      this.prices = prices;
+    },
+
     getStep(id) {
       const input = document.querySelector(id);
       if (input) {
@@ -328,9 +336,9 @@ export default {
       require("brace/snippets/javascript"); //snippet
     },
 
-    loadScripts() {
+    codeToCustomHandle() {
       if (this.code) {
-        this.scripts = rt(this.code, this);
+        this.customHandle = rt(this.code, this);
       }
     },
 
@@ -345,9 +353,14 @@ export default {
       this.channel = localStorage.getItem("trade.channel") || "";
       const saved = localStorage.getItem(`trade.${this.couple}`) || "{}";
       const data = JSON.parse(saved);
+      if (data.prices) delete data.prices;
       Object.assign(this, data);
-      this.removePast1h();
-      this.loadScripts();
+      this.codeToCustomHandle();
+    },
+
+    tick30s() {
+      // this.removePast1h();
+      this.save();
     },
 
     removePast1h() {
@@ -360,11 +373,6 @@ export default {
       }
     },
 
-    tick30s() {
-      this.removePast1h();
-      this.save();
-    },
-
     save(silient = true) {
       localStorage.setItem(
         `trade.${this.couple}`,
@@ -373,7 +381,6 @@ export default {
           am: this.am,
           a15m: this.a15m,
           ah: this.ah,
-          prices: this.prices,
           couple: this.couple,
           coin1: this.coin1,
           coin2: this.coin2,
@@ -391,7 +398,7 @@ export default {
 
       localStorage.setItem("trade.channel", this.channel);
 
-      this.loadScripts();
+      this.codeToCustomHandle();
 
       if (!silient) {
         this.$message.success("Đã lưu");
