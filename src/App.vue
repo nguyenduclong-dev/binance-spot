@@ -319,9 +319,14 @@ export default {
     getStep(id) {
       const input = document.querySelector(id);
       if (input) {
-        const step = +input.getAttribute("step");
-        const min = +input.getAttribute("min");
-        const precision = Math.abs(Math.log10(step));
+        const step = +input.getAttribute("step") || 1;
+        const min = +input.getAttribute("min") || step;
+        let precision;
+        if (+input.getAttribute("step") === 0) {
+          precision = input.getAttribute("step").length - 2;
+        } else {
+          precision = Math.abs(Math.log10(step));
+        }
         return { step, precision, min };
       }
 
