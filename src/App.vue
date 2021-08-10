@@ -209,6 +209,7 @@ export default {
       profit: 0,
       channel: "",
       filled: false,
+      histories: [],
     };
   },
 
@@ -432,6 +433,7 @@ export default {
           nextAction: this.nextAction,
           profit: this.profit,
           filled: this.filled,
+          histories: this.histories,
         })
       );
 
@@ -507,6 +509,8 @@ export default {
           const data = message.data;
 
           if (data.S === "SELL" && data.X === "FILLED") {
+            console.log("SELL FILLED", data);
+            this.histories.push(data);
             this.sellPrice = +data.p;
             this.sellAmount = +data.z;
             if (this.buyPrice && this.buyAmount) {
@@ -517,6 +521,8 @@ export default {
             this.filled = true;
             this.save();
           } else if (data.S === "BUY" && data.X === "FILLED") {
+            console.log("BUY FILLED", data);
+            this.histories.push(data);
             this.buyPrice = +data.p;
             this.buyAmount = +data.z;
             this.filled = true;
