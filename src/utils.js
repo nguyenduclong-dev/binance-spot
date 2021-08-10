@@ -3,7 +3,7 @@ export const rt = (text, context) =>
 
 export const toFixedNoRound = (value, fixed) => {
   const num = Number(value);
-  let str = Number(num.toFixed(fixed + 1)).toString();
+  let str = num.toFixed(fixed + 1);
 
   if (str.indexOf(".") >= 0) {
     return str.slice(0, -1);
