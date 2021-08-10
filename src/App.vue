@@ -17,7 +17,6 @@
       </div>
 
       <div
-        v-if="active"
         class="mt-2 flex justify-center items-center border"
         style="border-radius: 24px; padding: 4px 12px;background-color: #fff; margin-left: auto"
       >
@@ -65,8 +64,18 @@
           style="padding: 18px 20px; margin: -18px -20px; position: relative;"
         >
           <div class="flex flex-wrap flex-1 justify-start">
-            <div class="text-md font-bold w-full">
+            <div class="flex text-md font-bold w-full">
               {{ price | trimNumber }}
+              <div class="flex-1"></div>
+              <span
+                :class="[
+                  nextAction === 'sell' ? 'text-danger' : 'text-success',
+                ]"
+                style="margin-right: 20px"
+              >
+                <i class="el-icon-d-arrow-right"></i>
+                {{ nextAction | uppercase }}
+              </span>
             </div>
 
             <div class="w-full flex flex-wrap">
@@ -96,12 +105,6 @@
               </span>
             </div>
 
-            <div
-              :class="[nextAction === 'sell' ? 'text-danger' : 'text-success']"
-            >
-              {{ nextAction | uppercase }}
-            </div>
-
             <div>
               <template v-if="nextAction === 'sell'">
                 <span class="ml-2">
@@ -127,7 +130,7 @@
 
             <div
               class="text-md font-bold w-full"
-              :class="[pnl.percent < 0 ? 'text-danger' : 'text-success']"
+              :class="[profit < 0 ? 'text-danger' : 'text-success']"
             >
               Lợi nhuận: {{ profit | precision(6) | trimNumber }} {{ coin2 }}
             </div>
@@ -660,12 +663,12 @@ export default {
       const inputPrice = form.querySelector("#FormRow-SELL-price");
       const inputAmount = form.querySelector("#FormRow-SELL-quantity");
 
-      const price = +Math.max(
+      const price = +Math.min(
         toFixedNoRound(
           sellPrice,
           this.getStep("#FormRow-SELL-price").precision
         ),
-        this.getStep("#FormRow-SELL-price").min
+        this.getCoin2Avbl()
       );
 
       const amount = +Math.max(
