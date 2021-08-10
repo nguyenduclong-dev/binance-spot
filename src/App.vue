@@ -89,9 +89,7 @@
                 </span>
               </template>
             </div>
-            <div class="text-md font-bold w-full">
-              Lợi nhuận {{ profit | precision(6) | trimNumber }} {{ coin2 }}
-            </div>
+
             <div class="w-full flex flex-wrap">
               <span class="w-1/2">
                 <span class="mr">a10s:</span>
@@ -123,6 +121,13 @@
               :class="[nextAction === 'sell' ? 'text-danger' : 'text-success']"
             >
               {{ nextAction | uppercase }}
+            </div>
+
+            <div
+              class="text-md font-bold w-full"
+              :class="[pnl.percent < 0 ? 'text-danger' : 'text-success']"
+            >
+              Lợi nhuận: {{ profit | precision(6) | trimNumber }} {{ coin2 }}
             </div>
           </div>
           <el-button
